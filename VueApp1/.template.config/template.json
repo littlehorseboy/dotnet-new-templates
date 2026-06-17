@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "otis",
+  "classifications": [ "Web", "SPA", "Vue", "ASP.NET Core" ],
+  "identity": "VueAppDemo.CSharp",
+  "name": "ASP.NET Core + Vue 3 (Demo)",
+  "shortName": "vue-app-demo",
+  "description": "ASP.NET Core 8 後端 + Vue 3 + TypeScript + Vite 前端整合範本",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "VueApp1",
+  "preferNameDirectory": true,
+  "guids": [
+    "94EE3984-9B02-4333-9C51-ED089B8FD0E5",
+    "467C7082-17A3-4BD9-82F0-F76D316339E9",
+    "2C5D34F1-8EFC-4B0C-82B0-666ABD8E0ADF"
+  ],
+  "symbols": {
+    "nameLower": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "lowerCase",
+      "fileRename": "vueapp1"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".vs/**",
+            ".template.config/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/node_modules/**",
+            "**/*.user",
+            "**/.DS_Store"
+          ]
+        }
+      ]
+    }
+  ]
+}
