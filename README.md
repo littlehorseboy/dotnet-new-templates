@@ -28,13 +28,13 @@ dotnet new install .\<範本目錄>
 
 ## 可用範本
 
-### VueApp1 — Vue 3 + ASP.NET Core Web API
+### vue-app-demo
 
 以 Visual Studio 內建的 **Vue 和 ASP.NET Core** 專案類型為基礎，擴充額外工具鏈的全端專案範本。
 
-![新增專案對話框](assets/VueApp1/2026-06-17_15-56-02.png)
-![專案設定](assets/VueApp1/2026-06-17_13-28-50.png)
-![方案結構](assets/VueApp1/2026-06-17_13-29-00.png)
+![新增專案對話框](assets/vue-app-demo/2026-06-17_15-56-02.png)
+![專案設定](assets/vue-app-demo/2026-06-17_13-28-50.png)
+![方案結構](assets/vue-app-demo/2026-06-17_13-29-00.png)
 
 **前端**
 
@@ -62,7 +62,7 @@ dotnet new install .\<範本目錄>
 **安裝**
 
 ```bash
-dotnet new install .\VueApp1
+dotnet new install .\vue-app-demo
 ```
 
 **建立新專案**
