@@ -1,0 +1,51 @@
+我需要一個新的範本
+也是 vue and asp net core
+
+可以先用 dotnew new vue-app-demo 創出來
+
+但命名要想一下
+
+要挑前端第三方
+後端第三方
+專案寫的架構要拿到什麼程度
+
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@primevue/themes": "^4.3.1",
+    "@vee-validate/yup": "^4.15.0",
+    "axios": "^1.12.2",
+    "bootstrap": "^5.3.3",
+    "date-fns": "^4.1.0",
+    "lodash-es": "^4.17.21",
+    "pinia": "^3.0.1",
+    "primevue": "^4.3.1",
+    "uuid": "^11.1.0",
+    "vee-validate": "^4.15.0",
+    "vue-router": "^4.5.0",
+    "yup": "^1.6.1"
+
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+
+這個專案還有什麼通用值得抄的阿 你要看看嗎?
+
+後端
+一些 controller + service 的範例?
+Helpers 可以直接拿來用?
+DTO?
+IServiceCollectionExtensions?
+IServiceProviderExtensions?
+
+前端
+env
+vite.config.ts?
+router
+要做個登入，然後進到後台的功能嗎?
+
+
+
+因為公司的其他人會出設計好了厲害的 html，通常是用 bootstrap，複製過來我們改 vue 的語法上去
