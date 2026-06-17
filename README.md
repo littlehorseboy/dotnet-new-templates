@@ -4,6 +4,20 @@
 
 ---
 
+## 安裝方式
+
+Clone 此儲存庫後，進入對應範本目錄安裝：
+
+```bash
+git clone <this-repo>
+cd dotnet-new-templates
+dotnet new install .\<範本目錄>
+```
+
+安裝完成後，使用 `dotnet new <簡短名稱> -n <專案名稱>` 建立新專案。
+
+---
+
 ## 範本清單
 
 | 範本名稱 | 簡短名稱 | 語言 | 標記 |
@@ -40,28 +54,18 @@
 - Vite 開發伺服器透過 SpaProxy 將 API 請求代理至 ASP.NET Core
 - 透過 `dotnet dev-certs` 自動設定 HTTPS
 
----
-
-## 前置需求
+**前置需求**
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js](https://nodejs.org/) >= 20.19.0
 
----
-
-## 安裝範本
-
-Clone 此儲存庫後，在本機安裝範本：
+**安裝**
 
 ```bash
-git clone <this-repo>
-cd dotnet-new-templates
 dotnet new install .\VueApp1
 ```
 
----
-
-## 建立新專案
+**建立新專案**
 
 ```bash
 dotnet new vue-app-demo -n MyApp
