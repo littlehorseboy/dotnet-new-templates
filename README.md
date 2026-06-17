@@ -18,7 +18,7 @@
 
 以 Visual Studio 內建的 **Vue 和 ASP.NET Core** 專案類型為基礎，擴充額外工具鏈的全端專案範本。
 
-![新增專案對話框](assets/VueApp1/2026-06-17_13-28-14.png)
+![新增專案對話框](assets/VueApp1/2026-06-17_15-56-02.png)
 ![專案設定](assets/VueApp1/2026-06-17_13-28-50.png)
 ![方案結構](assets/VueApp1/2026-06-17_13-29-00.png)
 
