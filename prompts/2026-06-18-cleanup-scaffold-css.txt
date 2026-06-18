@@ -1,0 +1,9 @@
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8
+
+哈哈 說實話 排版挺糟糕的
+
+但功能很棒
+
+先請幫我徹底檢查一下是不是有沒用到的程式
+
+然後排版你打算怎麼優化
