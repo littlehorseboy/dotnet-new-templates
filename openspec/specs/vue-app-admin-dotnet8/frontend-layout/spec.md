@@ -8,7 +8,7 @@
 - **THEN** 頁面渲染 MainLayout（含 header 與 sidebar），內容區顯示 DashboardView
 
 ### Requirement: MainSidebar 從 router meta 衍生選單
-`MainSidebar.vue` SHALL 讀取 router 中 `meta.showInSidebar === true` 的路由，自動產生選單連結（顯示 `meta.sidebarLabel`，連結至該路由 path）。
+`MainSidebar.vue` SHALL 讀取 router 中 `meta.showInSidebar === true` 的路由，自動產生選單連結（顯示 `meta.sidebarLabel`，連結至該路由 path）。元件 SHALL 依賴 Vue Router 的全域注冊取得 `<RouterLink>`，不得在 `<script setup>` 中明確 import `RouterLink`。
 
 #### Scenario: 路由加入 meta.showInSidebar 後自動出現在選單
 - **WHEN** router 中有路由設定 `meta: { showInSidebar: true, sidebarLabel: 'Example Items' }`
