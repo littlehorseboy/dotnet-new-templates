@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "otis",
+  "classifications": [ "Web", "SPA", "Vue", "ASP.NET Core" ],
+  "identity": "VueAppAdminDotnet8.CSharp",
+  "name": "ASP.NET Core + Vue 3 (Admin)",
+  "shortName": "vue-app-admin-dotnet8",
+  "description": "ASP.NET Core 8 後端 + Vue 3 + TypeScript + Vite 後台管理系統範本（含 JWT 認證、Serilog、PrimeVue、Bootstrap）",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "VueAppAdmin",
+  "preferNameDirectory": true,
+  "guids": [
+    "aa192830-5e1f-4ea1-a650-2fbf711f1576",
+    "635051a9-1913-462a-af93-0094425bcfbb",
+    "d8383507-5d34-44e0-a6f6-be09f7aaed27"
+  ],
+  "symbols": {
+    "nameLower": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "lowerCase",
+      "fileRename": "vueappadmin"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".vs/**",
+            ".template.config/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/node_modules/**",
+            "**/*.user",
+            "**/.DS_Store"
+          ]
+        }
+      ]
+    }
+  ]
+}

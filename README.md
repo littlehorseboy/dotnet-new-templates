@@ -2,6 +2,8 @@
 
 自訂 `dotnet new` 專案範本集合。
 
+> 參考：[dotnet new 的自訂範本 — Microsoft Learn](https://learn.microsoft.com/zh-tw/dotnet/core/tools/custom-templates)
+
 ---
 
 ## 安裝方式
@@ -22,11 +24,62 @@ dotnet new install .\<範本目錄>
 
 | 範本名稱 | 簡短名稱 | 語言 | 標記 |
 |---------|---------|------|------|
+| ASP.NET Core + Vue 3 (Admin) | `vue-app-admin-dotnet8` | [C#] | Web/SPA/Vue/ASP.NET Core |
 | ASP.NET Core + Vue 3 | `vue-app-demo` | [C#] | Web/SPA/Vue/ASP.NET Core |
 
 ---
 
 ## 可用範本
+
+### vue-app-admin-dotnet8
+
+以 `vue-app-demo` 為基礎，加入後台管理系統完整骨架的全端專案範本。
+
+**前端**
+
+- Vue 3（Composition API）+ TypeScript
+- Vite 8，`/api` proxy，HTTPS dev cert 自動產生
+- Pinia（含 auth-store、user-info-store）
+- Vue Router 4，含 beforeEach 登入守衛
+- PrimeVue 4（Aura theme）+ Bootstrap 5 + FontAwesome 6
+- Vee-Validate + Yup 表單驗證
+
+**後端**
+
+- ASP.NET Core Web API（.NET 8）
+- JWT Bearer 認證（`AuthController`、`JwtService`、`AuthService`）
+- Serilog（Console + rolling file，`.txt` 與 `.json`）
+- `IServiceCollectionExtensions` 服務註冊模式
+- DTO Request/Response 分層結構
+- ExampleItems Controller + Service（hardcoded dummy data 示範分層）
+- Swagger 含 JWT Bearer security definition
+
+**開發體驗**
+
+- 登入後進入 MainLayout（Header + Sidebar 從 `router meta.showInSidebar` 自動衍生）
+- 帳號 `admin` / 密碼 `password`（範本用，實際使用請替換）
+- `appsettings.json` 的 `Jwt:SignKey` 需替換為正式金鑰
+
+**前置需求**
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js](https://nodejs.org/) >= 20.19.0
+
+**安裝**
+
+```bash
+dotnet new install .\vue-app-admin-dotnet8
+```
+
+**建立新專案**
+
+```bash
+dotnet new vue-app-admin-dotnet8 -n MyApp
+cd MyApp
+dotnet run --project MyApp.Server
+```
+
+---
 
 ### vue-app-demo
 
@@ -70,5 +123,5 @@ dotnet new install .\vue-app-demo
 ```bash
 dotnet new vue-app-demo -n MyApp
 cd MyApp
-dotnet run
+dotnet run --project MyApp.Server
 ```
