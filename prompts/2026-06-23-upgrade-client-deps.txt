@@ -1,0 +1,41 @@
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\vueappadmin.client\package.json
+
+pnpm i @fortawesome/free-solid-svg-icons@7
+
+pnpm i @fortawesome/free-regular-svg-icons@7
+
+pnpm i @fortawesome/free-brands-svg-icons@7
+
+pnpm i @fortawesome/fontawesome-svg-core@7
+
+pnpm i vue-router@5
+
+[WARN] deprecated @primevue/themes@4.5.4: Deprecated. This package is no longer maintained. Please migrate to @primeuix/themes: https://www.npmjs.com/package/@primeuix/themes
+
+
+pnpm i -D dotenv@17
+
+pnpm i -D npm-run-all2@9
+
+看起來這些要升級或替換，針對這包專案
+
+大版本比較有疑慮
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\vueappadmin.client
+
+想問你覺得升級有什麼需要注意的嗎?
+
+
+@fortawesome/vue-fontawesome 已是最新
+
+pnpm info @fortawesome/vue-fontawesome versions
+
+  "3.1.1",
+  "3.1.2",
+  "3.1.3",
+  "3.2.0"
+]
+
+1. 跟上最新
+跟上最新
+跟上最新
