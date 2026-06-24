@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="VueAppAdmin.Server\VueAppAdmin.Server.csproj" />
+  <Project Path="vueappadmin.client\vueappadmin.client.esproj" />
+</Solution>

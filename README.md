@@ -125,3 +125,25 @@ dotnet new vue-app-demo -n MyApp
 cd MyApp
 dotnet run --project MyApp.Server
 ```
+
+---
+
+## 維護筆記
+
+### `Microsoft.VisualStudio.JavaScript.Sdk` 版本
+
+各範本的 `*.client.esproj` 中有一行：
+
+```xml
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2752196">
+```
+
+這個版本號跟著 Visual Studio 安裝器走，**不會自動更新**。建議在 VS 升級後手動確認：
+
+1. 在 VS 建立任意 TypeScript 或 JavaScript 專案
+2. 開啟產生的 `.esproj`，比對版本號
+3. 若有新版本，更新此 repo 中所有 `.esproj` 的版本號
+
+或直接查 NuGet：搜尋 `Microsoft.VisualStudio.JavaScript.Sdk` 取得最新版本。
+
+舊版本向後相容，不急著更新，定期（每次 VS 大版升級後）確認即可。

@@ -12,17 +12,62 @@
   },
   "sourceName": "VueAppAdmin",
   "preferNameDirectory": true,
-  "guids": [
-    "aa192830-5e1f-4ea1-a650-2fbf711f1576",
-    "635051a9-1913-462a-af93-0094425bcfbb",
-    "d8383507-5d34-44e0-a6f6-be09f7aaed27"
-  ],
   "symbols": {
     "nameLower": {
       "type": "derived",
       "valueSource": "name",
       "valueTransform": "lowerCase",
       "fileRename": "vueappadmin"
+    },
+    "HttpPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 16100,
+        "high": 16199,
+        "fallback": "16100"
+      },
+      "replaces": "5159"
+    },
+    "HttpsPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 16200,
+        "high": 16299,
+        "fallback": "16200"
+      },
+      "replaces": "7173"
+    },
+    "IisPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 16300,
+        "high": 16399,
+        "fallback": "16300"
+      },
+      "replaces": "21655"
+    },
+    "IisSslPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 16400,
+        "high": 16499,
+        "fallback": "16400"
+      },
+      "replaces": "44385"
+    },
+    "SpaPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 16500,
+        "high": 16599,
+        "fallback": "16500"
+      },
+      "replaces": "23288"
     }
   },
   "sources": [
@@ -35,9 +80,13 @@
             ".template.config/**",
             "**/bin/**",
             "**/obj/**",
+            "**/dist/**",
             "**/node_modules/**",
             "**/*.user",
-            "**/.DS_Store"
+            "**/.DS_Store",
+            "**/package-lock.json",
+            "**/pnpm-lock.yaml",
+            "**/pnpm-workspace.yaml"
           ]
         }
       ]
