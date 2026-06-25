@@ -1,0 +1,18 @@
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8
+
+這包專案
+
+想先探究
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\VueAppAdmin.Server
+
+這種 WEBAPI 專案的資料夾結構怎麼設計
+
+所有程式的好寫法
+
+API 該怎麼 input output，要不要先訂好之類的
+
+你先盤點出來我們來好好討論
+
+
+先讓我把這個 WebAPI 專案的現況盤點清楚。
