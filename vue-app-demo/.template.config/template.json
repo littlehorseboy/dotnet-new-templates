@@ -23,6 +23,56 @@
       "valueSource": "name",
       "valueTransform": "lowerCase",
       "fileRename": "vueapp1"
+    },
+    "HttpPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15100,
+        "high": 15199,
+        "fallback": "15100"
+      },
+      "replaces": "5159"
+    },
+    "HttpsPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15200,
+        "high": 15299,
+        "fallback": "15200"
+      },
+      "replaces": "7173"
+    },
+    "IisPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15300,
+        "high": 15399,
+        "fallback": "15300"
+      },
+      "replaces": "21655"
+    },
+    "IisSslPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15400,
+        "high": 15499,
+        "fallback": "15400"
+      },
+      "replaces": "44385"
+    },
+    "SpaPort": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15500,
+        "high": 15599,
+        "fallback": "15500"
+      },
+      "replaces": "23288"
     }
   },
   "sources": [
@@ -35,9 +85,14 @@
             ".template.config/**",
             "**/bin/**",
             "**/obj/**",
+            "**/dist/**",
             "**/node_modules/**",
             "**/*.user",
-            "**/.DS_Store"
+            "**/.DS_Store",
+            "**/package-lock.json",
+            "**/pnpm-lock.yaml",
+            "**/pnpm-workspace.yaml",
+            "**/logs/**"
           ]
         }
       ]
