@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { ApiResponse } from '@/types/api';
 
-const TOKEN_KEY = 'SiteToken';
+const TOKEN_KEY = 'authToken';
 
 const apiClient = axios.create();
 

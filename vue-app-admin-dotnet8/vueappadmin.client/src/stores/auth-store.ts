@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const TOKEN_KEY = 'SiteToken';
+const TOKEN_KEY = 'authToken';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
