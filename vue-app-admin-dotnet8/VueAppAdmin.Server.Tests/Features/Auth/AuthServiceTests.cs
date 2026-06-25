@@ -1,18 +1,10 @@
-using Microsoft.Extensions.Logging;
-using NSubstitute;
 using VueAppAdmin.Server.Features.Auth;
 
 namespace VueAppAdmin.Server.Tests.Features.Auth;
 
 public class AuthServiceTests
 {
-    private readonly ILogger<AuthService> _logger = Substitute.For<ILogger<AuthService>>();
-    private readonly AuthService _sut;
-
-    public AuthServiceTests()
-    {
-        _sut = new AuthService(_logger);
-    }
+    private readonly AuthService _sut = new();
 
     [Fact]
     public void ValidateCredentials_ValidCredentials_ReturnsTrue()
