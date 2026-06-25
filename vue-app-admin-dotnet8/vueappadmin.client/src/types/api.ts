@@ -5,6 +5,10 @@ export interface ApiResponse<T> {
     results: T[] | null;
 }
 
+export interface ApiPagedResponse<T> extends ApiResponse<T> {
+    total: number;
+}
+
 export interface LoginRequest {
     username: string;
     password: string;

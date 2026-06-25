@@ -6,7 +6,7 @@ import MainSidebar from '@/components/MainLayout/MainSidebar.vue';
 <template>
     <div class="d-flex flex-column vh-100">
         <MainHeader />
-        <div class="d-flex flex-grow-1 overflow-hidden">
+        <div class="flex-grow-1 overflow-hidden" style="display: grid; grid-template-columns: minmax(8rem, max-content) 1fr">
             <MainSidebar />
             <main class="flex-grow-1 overflow-auto p-4">
                 <RouterView />

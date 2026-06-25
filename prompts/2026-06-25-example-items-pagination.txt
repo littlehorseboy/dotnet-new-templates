@@ -1,0 +1,7 @@
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8
+
+example-items 如果要做分頁，還要做點 th 排序
+
+不知是否很難，PrimeVue 能直接實現嗎?
+
+API 也要假裝有接 Skip 跟 Top，這是模仿 OData 的吧 還是你有更好的建議?

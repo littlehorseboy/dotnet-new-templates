@@ -9,12 +9,12 @@ const sidebarRoutes = router.getRoutes().filter(
 </script>
 
 <template>
-    <nav class="bg-light border-end" style="width: 220px; min-height: 100%">
+    <nav class="border-end">
         <ul class="nav flex-column pt-3">
             <li v-for="route in sidebarRoutes" :key="route.path" class="nav-item">
                 <RouterLink
                     :to="route.path"
-                    class="nav-link text-dark d-flex align-items-center gap-2"
+                    class="nav-link text-body d-flex align-items-center gap-2"
                     active-class="fw-bold text-primary"
                 >
                     <i v-if="route.meta.sidebarIcon" class="bi" :class="route.meta.sidebarIcon"></i>

@@ -13,7 +13,12 @@ import router from './router';
 
 const app = createApp(App);
 
-app.use(PrimeVue, { theme: { preset: Aura } });
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: { darkModeSelector: '.p-dark' }
+    }
+});
 app.use(createPinia());
 app.use(router);
 

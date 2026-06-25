@@ -45,6 +45,8 @@ dotnet new install .\<範本目錄>
 - Vee-Validate + Yup 表單驗證
 - 集中式 axios instance（Bearer token 自動注入、ApiResponse<T> unwrap、401 自動登出）
 - Feature-level API modules（`src/api/`）+ server 合約 TypeScript 型別（`src/types/api.ts`）
+- `useTheme` composable — dark/light mode 手動切換，狀態存 localStorage，初始值 fallback 至 `prefers-color-scheme`
+- Admin layout 以 CSS Grid 排版（sidebar 寬度由內容決定，`minmax(8rem, max-content)`），不寫死 px
 
 **後端**
 
@@ -55,7 +57,8 @@ dotnet new install .\<範本目錄>
 - Request / Response 分層結構
 - ExampleItems Controller + Service（hardcoded dummy data 示範分層）
 - Swagger 含 JWT Bearer security definition
-- 統一 `ApiResponse<T>` 回應包裝格式
+- 統一 `ApiResponse<T>` 回應包裝格式；分頁端點另有 `ApiPagedResponse<T>`（含 `Total`，提供 `OkPaged` 工廠方法）
+- ExampleItems 示範 server-side 分頁排序（`skip` / `top` / `sortField` / `sortOrder` query params，PrimeVue DataTable lazy 模式）
 
 **測試**
 
@@ -66,6 +69,7 @@ dotnet new install .\<範本目錄>
 **開發體驗**
 
 - 登入後進入 MainLayout（Header + Sidebar 從 `router meta.showInSidebar` / `sidebarIcon` 自動衍生）
+- Header 右上角 dark/light mode 切換按鈕（太陽 / 月亮 icon），PrimeVue 與 Bootstrap 同步切換
 - 帳號 `admin` / 密碼 `password`（範本用，實際使用請替換）
 - `appsettings.json` 的 `Jwt:SignKey` 需替換為正式金鑰
 

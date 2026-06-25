@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth-store';
 import { useUserInfoStore } from '@/stores/user-info-store';
+import { isDark, toggle } from '@/composables/useTheme';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -15,11 +16,14 @@ function logout() {
 </script>
 
 <template>
-    <header class="navbar navbar-expand navbar-dark bg-dark px-3">
+    <header class="navbar navbar-expand px-3 border-bottom bg-body-tertiary">
         <span class="navbar-brand mb-0 h1">VueAppAdmin</span>
         <div class="ms-auto d-flex align-items-center gap-3">
-            <span class="text-white-50 small">{{ userInfoStore.displayName }}</span>
-            <button class="btn btn-outline-light btn-sm" @click="logout">登出</button>
+            <button class="btn btn-link text-body-secondary p-0" @click="toggle" :title="isDark ? '切換淺色模式' : '切換深色模式'">
+                <i :class="isDark ? 'bi bi-sun' : 'bi bi-moon-stars-fill'" style="font-size: 1.1rem;"></i>
+            </button>
+            <span class="text-body-secondary small">{{ userInfoStore.displayName }}</span>
+            <button class="btn btn-outline-secondary btn-sm" @click="logout">登出</button>
         </div>
     </header>
 </template>
