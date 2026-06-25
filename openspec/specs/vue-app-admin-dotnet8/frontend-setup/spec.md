@@ -34,15 +34,15 @@
 - **THEN** 不存在 `@primevue/themes` 條目，僅存在 `@primeuix/themes`
 
 ### Requirement: main.ts 完整初始化所有套件
-`main.ts` SHALL 初始化 Vue app 並 `use()` PrimeVue（含 theme）、Pinia、Vue Router，並呼叫 `auth-store.init()` 設定初始認證狀態。PrimeVue theme preset SHALL 從 `@primeuix/themes/aura` 匯入（不得使用 `@primevue/themes/aura`）。
+`main.ts` SHALL 初始化 Vue app 並 `use()` PrimeVue（含 theme）、Pinia、Vue Router。`main.ts` SHALL NOT 呼叫 `auth-store.init()`，亦不 import `useAuthStore`；token 注入由 `src/lib/axios.ts` 的 request interceptor 在每次請求時自動處理，不需要啟動時的初始化步驟。PrimeVue theme preset SHALL 從 `@primeuix/themes/aura` 匯入。
 
 #### Scenario: 應用程式啟動完整初始化
 - **WHEN** 前端應用程式啟動
-- **THEN** PrimeVue、Pinia、Vue Router 均已掛載，`auth-store.init()` 已執行
+- **THEN** PrimeVue、Pinia、Vue Router 均已掛載；不存在 `authStore.init()` 呼叫
 
-#### Scenario: Aura preset 從正確路徑匯入
-- **WHEN** 查看 `main.ts` 的 import 宣告
-- **THEN** `Aura` 從 `@primeuix/themes/aura` 匯入，不存在任何指向 `@primevue/themes` 的 import
+#### Scenario: 頁面重整後 API 請求仍自動攜帶 token
+- **WHEN** 使用者重整頁面後（`main.ts` 重新執行），`localStorage` 存有 `SiteToken`，並發出 API 請求
+- **THEN** 請求自動攜帶 Authorization header，無需 `main.ts` 做任何 token 相關初始化
 
 ### Requirement: main.css 不含 scaffold 殘留樣式
 `main.css` SHALL 只包含 `@import './base.css'`，不得包含 `#app` 的 max-width / padding 限制、`.green` class、`a` 的 scaffold 連結樣式、或任何 `@media` 將 `body` 設為 `display: flex` 的規則。

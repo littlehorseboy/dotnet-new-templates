@@ -8,6 +8,7 @@ const authStore = useAuthStore();
 const userInfoStore = useUserInfoStore();
 
 function logout() {
+    if (!confirm('確定要登出嗎？')) return;
     authStore.logout();
     router.push({ name: 'login' });
 }

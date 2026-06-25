@@ -1,4 +1,4 @@
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: auth-store 管理 JWT token 狀態
 `auth-store.ts` SHALL 以 Pinia 定義，state 包含 `isAuthenticated: boolean`，初始值依 `localStorage.getItem('SiteToken')` 是否存在決定。`auth-store` SHALL NOT 操作 `axios.defaults.headers` 或任何 axios 狀態；token 注入責任完全由 `src/lib/axios.ts` 的 request interceptor 承擔。`init()` action SHALL NOT 存在，不需要在應用程式啟動時呼叫任何初始化方法。
@@ -33,17 +33,6 @@
 #### Scenario: 空白欄位提交觸發驗證
 - **WHEN** 使用者未填寫欄位即按送出
 - **THEN** Vee-Validate 顯示欄位必填錯誤，不發送 API 請求
-
-### Requirement: router beforeEach 守衛保護需認證的路由
-`router/index.ts` 的 `beforeEach` 守衛 SHALL 檢查 `auth-store.isAuthenticated`，未登入時 SHALL 導向 `/login`。`meta.noAuthRequired: true` 的路由（如 `/login`）不受守衛限制。
-
-#### Scenario: 未登入存取受保護頁面
-- **WHEN** 未登入使用者嘗試進入 `/dashboard`
-- **THEN** router 導向 `/login`
-
-#### Scenario: 已登入存取 login 頁面
-- **WHEN** 已登入使用者進入 `/login`
-- **THEN** router 導向 `/dashboard`（避免重複登入）
 
 ### Requirement: user-info-store 儲存登入使用者基本資訊
 `user-info-store.ts` SHALL 以 Pinia 定義，state 包含 `username: string`、`displayName: string`、`isLoading: boolean`、`error: string | null`。`fetchUserInfo()` action SHALL 在執行期間設定 `isLoading = true`、`error = null`，成功後填入 `username` 與 `displayName`，失敗後設定 `error` 為錯誤訊息，finally 設定 `isLoading = false`。

@@ -11,12 +11,7 @@
 - **WHEN** 路由切換完成（router.afterEach 觸發）
 - **THEN** 進度條推進至 100% 並在 300ms 後隱藏，不殘留在畫面上
 
-### Requirement: MainLayout 提供後台主版面骨架
-`MainLayout.vue` SHALL 作為已登入頁面的 layout 元件，包含 `MainHeader`、`MainSidebar` 與主內容區 `<RouterView>`，透過 Vue Router 的 nested routes 機制掛載。
-
-#### Scenario: 已登入頁面使用 MainLayout
-- **WHEN** 已登入使用者進入 `/dashboard`
-- **THEN** 頁面渲染 MainLayout（含 header 與 sidebar），內容區顯示 DashboardView
+## MODIFIED Requirements
 
 ### Requirement: MainSidebar 從 router meta 衍生選單
 `MainSidebar.vue` SHALL 讀取 router 中 `meta.showInSidebar === true` 的路由，自動產生選單連結。選單項目 SHALL 顯示 `meta.sidebarLabel` 文字，若路由設定了 `meta.sidebarIcon`（Bootstrap Icon class name，如 `bi-speedometer2`），SHALL 在文字前渲染對應的 `<i class="bi :class="sidebarIcon">` icon。元件 SHALL 依賴 Vue Router 的全域注冊取得 `<RouterLink>`，不得在 `<script setup>` 中明確 import `RouterLink`。
@@ -32,10 +27,6 @@
 #### Scenario: 路由加入 meta.showInSidebar 後自動出現在選單
 - **WHEN** router 中有路由設定 `meta: { showInSidebar: true, sidebarLabel: 'Example Items' }`
 - **THEN** Sidebar 顯示該選單項目，點擊後導向對應路由
-
-#### Scenario: 無 showInSidebar 的路由不出現在選單
-- **WHEN** router 中有路由未設定 `meta.showInSidebar`（或設為 `false`）
-- **THEN** Sidebar 不顯示該路由的選單項目
 
 ### Requirement: MainHeader 顯示應用名稱與登出按鈕
 `MainHeader.vue` SHALL 顯示應用程式名稱及登出按鈕，點擊登出後 SHALL 以 `confirm()` 請使用者確認，確認後呼叫 `auth-store.logout()` 並導向 `/login`；取消則不執行任何操作。

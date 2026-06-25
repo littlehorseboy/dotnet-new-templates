@@ -1,16 +1,26 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import { getMe } from '@/api/auth.api';
 
 export const useUserInfoStore = defineStore('userInfo', {
     state: () => ({
         username: '',
-        displayName: ''
+        displayName: '',
+        isLoading: false,
+        error: null as string | null
     }),
     actions: {
         async fetchUserInfo() {
-            const { data } = await axios.get<{ username: string; displayName: string }>('/api/Auth/Me');
-            this.username = data.username;
-            this.displayName = data.displayName;
+            this.isLoading = true;
+            this.error = null;
+            try {
+                const me = await getMe();
+                this.username = me.username;
+                this.displayName = me.displayName;
+            } catch (err) {
+                this.error = err instanceof Error ? err.message : '無法取得使用者資訊';
+            } finally {
+                this.isLoading = false;
+            }
         }
     }
 });

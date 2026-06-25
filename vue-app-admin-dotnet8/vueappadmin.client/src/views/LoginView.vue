@@ -2,16 +2,17 @@
 import { ref } from 'vue';
 import { useForm } from 'vee-validate';
 import { object, string } from 'yup';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth-store';
 import { useUserInfoStore } from '@/stores/user-info-store';
+import { login } from '@/api/auth.api';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const userInfoStore = useUserInfoStore();
 
 const loginError = ref('');
+const isSubmitting = ref(false);
 
 const { handleSubmit, defineField, errors } = useForm({
     validationSchema: object({
@@ -25,16 +26,16 @@ const [password, passwordAttrs] = defineField('password');
 
 const onSubmit = handleSubmit(async (values) => {
     loginError.value = '';
+    isSubmitting.value = true;
     try {
-        const { data } = await axios.post<{ token: string }>('/api/Auth/Login', {
-            username: values.username,
-            password: values.password
-        });
-        authStore.login(data.token);
+        const response = await login({ username: values.username, password: values.password });
+        authStore.login(response.token);
         await userInfoStore.fetchUserInfo();
         router.push({ name: 'dashboard' });
-    } catch {
-        loginError.value = '帳號或密碼錯誤';
+    } catch (err) {
+        loginError.value = err instanceof Error ? err.message : '帳號或密碼錯誤';
+    } finally {
+        isSubmitting.value = false;
     }
 });
 </script>
@@ -53,6 +54,8 @@ const onSubmit = handleSubmit(async (values) => {
                             type="text"
                             class="form-control"
                             :class="{ 'is-invalid': errors.username }"
+                            autocomplete="username"
+                            :disabled="isSubmitting"
                         />
                         <div class="invalid-feedback">{{ errors.username }}</div>
                     </div>
@@ -64,11 +67,16 @@ const onSubmit = handleSubmit(async (values) => {
                             type="password"
                             class="form-control"
                             :class="{ 'is-invalid': errors.password }"
+                            autocomplete="current-password"
+                            :disabled="isSubmitting"
                         />
                         <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
                     <div v-if="loginError" class="alert alert-danger py-2">{{ loginError }}</div>
-                    <button type="submit" class="btn btn-primary w-100">登入</button>
+                    <button type="submit" class="btn btn-primary w-100" :disabled="isSubmitting">
+                        <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        {{ isSubmitting ? '登入中...' : '登入' }}
+                    </button>
                 </form>
             </div>
         </div>

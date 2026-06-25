@@ -8,25 +8,32 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: () => import('@/views/LoginView.vue'),
-            meta: { noAuthRequired: true }
+            meta: { noAuthRequired: true, title: '登入' }
         },
         {
             path: '/',
             component: () => import('@/views/layouts/MainLayout.vue'),
+            redirect: { name: 'dashboard' },
             children: [
                 {
                     path: 'dashboard',
                     name: 'dashboard',
                     component: () => import('@/views/DashboardView.vue'),
-                    meta: { showInSidebar: true, sidebarLabel: 'Dashboard' }
+                    meta: { showInSidebar: true, sidebarLabel: 'Dashboard', sidebarIcon: 'bi-speedometer2', title: 'Dashboard' }
                 },
                 {
                     path: 'example-items',
                     name: 'example-items',
                     component: () => import('@/views/ExampleItemsView.vue'),
-                    meta: { showInSidebar: true, sidebarLabel: 'Example Items' }
+                    meta: { showInSidebar: true, sidebarLabel: 'Example Items', sidebarIcon: 'bi-list-ul', title: 'Example Items' }
                 }
             ]
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('@/views/NotFoundView.vue'),
+            meta: { noAuthRequired: true, title: '404' }
         }
     ]
 });
@@ -41,6 +48,11 @@ router.beforeEach((to) => {
     if (to.name === 'login' && authStore.isAuthenticated) {
         return { name: 'dashboard' };
     }
+});
+
+router.afterEach((to) => {
+    const title = to.meta.title;
+    document.title = title ? `${title} | VueAppAdmin` : 'VueAppAdmin';
 });
 
 export default router;
