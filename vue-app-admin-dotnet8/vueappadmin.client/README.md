@@ -81,7 +81,7 @@ view / store
           → /api/...           ← Vite proxy → ASP.NET Core
 ```
 
-**Request interceptor**：每次請求前從 `localStorage` 讀取 `authToken`，自動帶入 `Authorization: Bearer` header。
+**Request interceptor**：每次請求前從 `localStorage` 讀取 `{VITE_APP_NAME}_authToken`，自動帶入 `Authorization: Bearer` header。
 
 **Response interceptor**：
 - `success: false` → 丟出含 server `message` 的 `Error`

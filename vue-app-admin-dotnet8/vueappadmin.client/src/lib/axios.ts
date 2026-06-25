@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { ApiResponse } from '@/types/api';
 
-const TOKEN_KEY = 'authToken';
+const TOKEN_KEY = `${import.meta.env.VITE_APP_NAME}_authToken`;
 
 const apiClient = axios.create();
 

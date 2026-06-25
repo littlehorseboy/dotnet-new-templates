@@ -64,7 +64,11 @@ VueAppAdmin.Server/
 ## 啟動
 
 ```bash
-dotnet run
+# 在專案根目錄（含 .sln）時，需指定專案路徑
+dotnet run --project .\VueAppAdmin.Server\ --launch-profile https
+
+# 已在 VueAppAdmin.Server/ 目錄內時可直接執行
+dotnet run --launch-profile https
 ```
 
 Swagger UI：`https://localhost:7173/swagger`（Development 環境）

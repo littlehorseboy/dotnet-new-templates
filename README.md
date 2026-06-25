@@ -39,24 +39,33 @@ dotnet new install .\<範本目錄>
 
 - Vue 3（Composition API）+ TypeScript
 - Vite 8，`/api` proxy，HTTPS dev cert 自動產生
-- Pinia（含 auth-store、user-info-store）
-- Vue Router 4，含 beforeEach 登入守衛
-- PrimeVue 4（Aura theme）+ Bootstrap 5 + FontAwesome 6
+- Pinia（含 auth-store、user-info-store，含 loading / error state）
+- Vue Router 5，含 beforeEach 登入守衛、404 catch-all、document.title 更新
+- PrimeVue 4（Aura theme）+ Bootstrap 5 + Bootstrap Icons + FontAwesome 7
 - Vee-Validate + Yup 表單驗證
+- 集中式 axios instance（Bearer token 自動注入、ApiResponse<T> unwrap、401 自動登出）
+- Feature-level API modules（`src/api/`）+ server 合約 TypeScript 型別（`src/types/api.ts`）
 
 **後端**
 
 - ASP.NET Core Web API（.NET 8）
 - JWT Bearer 認證（`AuthController`、`JwtService`、`AuthService`）
 - Serilog（Console + rolling file，`.txt` 與 `.json`）
-- `IServiceCollectionExtensions` 服務註冊模式
-- DTO Request/Response 分層結構
+- Feature-based 垂直切片架構（`Features/<feature>/`）
+- Request / Response 分層結構
 - ExampleItems Controller + Service（hardcoded dummy data 示範分層）
 - Swagger 含 JWT Bearer security definition
+- 統一 `ApiResponse<T>` 回應包裝格式
+
+**測試**
+
+- xUnit 測試專案（`VueAppAdmin.Server.Tests`）
+- NSubstitute mock 框架
+- Coverlet 程式碼覆蓋率收集
 
 **開發體驗**
 
-- 登入後進入 MainLayout（Header + Sidebar 從 `router meta.showInSidebar` 自動衍生）
+- 登入後進入 MainLayout（Header + Sidebar 從 `router meta.showInSidebar` / `sidebarIcon` 自動衍生）
 - 帳號 `admin` / 密碼 `password`（範本用，實際使用請替換）
 - `appsettings.json` 的 `Jwt:SignKey` 需替換為正式金鑰
 

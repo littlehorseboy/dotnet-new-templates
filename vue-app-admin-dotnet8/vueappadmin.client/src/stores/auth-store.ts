@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const TOKEN_KEY = 'authToken';
+const TOKEN_KEY = `${import.meta.env.VITE_APP_NAME}_authToken`;
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
