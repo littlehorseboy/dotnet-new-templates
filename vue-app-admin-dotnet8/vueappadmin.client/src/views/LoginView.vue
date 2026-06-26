@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { isDark } from '@/composables/useTheme';
 import { useForm } from 'vee-validate';
 import { object, string } from 'yup';
 import { useRouter } from 'vue-router';
@@ -41,7 +42,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-body">
         <div class="card shadow" style="width: 360px">
             <div class="card-body p-4">
                 <h4 class="card-title mb-4 text-center">VueAppAdmin</h4>
@@ -73,7 +74,7 @@ const onSubmit = handleSubmit(async (values) => {
                         <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
                     <div v-if="loginError" class="alert alert-danger py-2">{{ loginError }}</div>
-                    <button type="submit" class="btn btn-primary w-100" :disabled="isSubmitting">
+                    <button type="submit" class="btn w-100" :class="isDark ? 'btn-light' : 'btn-primary'" :disabled="isSubmitting">
                         <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
                         {{ isSubmitting ? '登入中...' : '登入' }}
                     </button>

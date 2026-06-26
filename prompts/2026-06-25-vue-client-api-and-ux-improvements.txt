@@ -1,0 +1,8 @@
+feat(vue-app-admin-dotnet8): 新增 server-side 分頁排序、深淺色切換與版面調整
+
+- ExampleItems：支援 skip/top/sortField/sortOrder query params，PrimeVue DataTable 改為 lazy 模式；
+  後端新增 ApiPagedResponse<T> 及 OkPaged 工廠方法
+- 深淺色切換：新增 useTheme composable（localStorage 記憶 + system preference fallback），
+  Header 加入太陽／月亮切換按鈕；PrimeVue darkModeSelector 設為 .p-dark，同步 Bootstrap data-bs-theme
+- 版面：Sidebar 改用 CSS Grid（minmax(8rem, max-content)），移除硬寫死寬度；
+  Header 與 Sidebar 改用 Bootstrap 5.3 語義 class（bg-body-tertiary、text-body-secondary 等）
