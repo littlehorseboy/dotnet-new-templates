@@ -1,10 +1,12 @@
 import axios from 'axios';
 import type { ApiResponse } from '@/types/api';
 
+// TOKEN_KEY 包含 APP_NAME 前綴，避免多個應用共用 localStorage 時 key 衝突
 const TOKEN_KEY = `${import.meta.env.VITE_APP_NAME}_authToken`;
 
 const apiClient = axios.create();
 
+// Request interceptor：自動從 localStorage 讀取 Token 並注入 Authorization header
 apiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
@@ -13,8 +15,12 @@ apiClient.interceptors.request.use((config) => {
     return config;
 });
 
+// 防止 401 觸發多次重導（例如同時發出多個請求時）
 let isRedirectingToLogin = false;
 
+// Response interceptor：
+//   成功回應但 success = false → 轉為 rejected（顯示 API 回傳的錯誤訊息）
+//   HTTP 401（非 Login 端點）→ 清除 Token 並跳轉 /login
 apiClient.interceptors.response.use(
     (response) => {
         const body = response.data as ApiResponse<unknown>;

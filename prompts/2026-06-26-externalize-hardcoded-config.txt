@@ -1,0 +1,25 @@
+幫我對 D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8
+
+的所有程式碼補上註解
+
+有 hardcode 需要轉換表的地方更要加註
+
+
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\VueAppAdmin.Server.Tests\README.md
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\VueAppAdmin.Server\README.md
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\vueappadmin.client\README.md
+
+也要更新了
+
+前端測試要寫 npm run test -- --run
+
+這種不會卡住 terminal
+
+
+
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8\.template.config\template.json
+
+這個再次檢查一下，這次改的不確定有沒有影響

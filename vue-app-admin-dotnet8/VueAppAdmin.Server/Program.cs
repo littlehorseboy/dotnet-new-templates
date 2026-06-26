@@ -3,27 +3,37 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using VueAppAdmin.Server.Features.Auth;
+using VueAppAdmin.Server.Features.ExampleCategories;
 using VueAppAdmin.Server.Features.ExampleItems;
+using VueAppAdmin.Server.Features.FeatureList;
+using VueAppAdmin.Server.Features.Menu;
 using VueAppAdmin.Server.Shared;
 using VueAppAdmin.Server.Shared.Database;
 using VueAppAdmin.Server.Shared.Jwt;
 using VueAppAdmin.Server.Shared.Logging;
 using VueAppAdmin.Server.Shared.Middleware;
 
+// bootstrap logger：在 DI 容器建立前即可記錄，捕捉啟動期間的錯誤
 SerilogHelper.Initialize();
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // 讀取 Log 保留天數設定（Logging:RetentionDays），預設 365 天
+    var logRetentionDays = builder.Configuration.GetValue<int>("Logging:RetentionDays", 365);
+
+    // system logger：記錄 HTTP 請求與應用程式層級事件，獨立於各 feature 的 logger
     var systemLogger = new LoggerConfiguration()
         .MinimumLevel.Information()
         .WriteTo.Console()
-        .WriteTo.File("logs/log-system-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 365)
+        .WriteTo.File("logs/log-system-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: logRetentionDays)
         .CreateLogger();
 
     builder.Services.AddSerilog(systemLogger);
 
+    // 全域套用 [Authorize]，所有 Controller 預設需要驗證
+    // 需要匿名存取的端點（如 Login）須加上 [AllowAnonymous]
     builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -31,6 +41,7 @@ try
     .AddNewtonsoftJson()
     .ConfigureApiBehaviorOptions(options =>
     {
+        // 覆寫預設的 Model Validation 回應格式，統一為 ApiResponse
         options.InvalidModelStateResponseFactory = context =>
         {
             var logger = context.HttpContext.RequestServices
@@ -50,6 +61,7 @@ try
     });
 
     builder.Services.AddEndpointsApiExplorer();
+    // Swagger 設定 Bearer Token 認證，方便開發時直接在 Swagger UI 測試受保護的端點
     builder.Services.AddSwaggerGen(options =>
     {
         options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
@@ -77,12 +89,17 @@ try
     builder.Services.AddJwtAuthentication(builder.Configuration);
     builder.Services.AddDatabase(builder.Configuration);
     builder.Services.AddAuthFeature();
+    builder.Services.AddFeaturesFeature();
+    builder.Services.AddExampleCategoriesFeature();
     builder.Services.AddExampleItemsFeature();
+    builder.Services.AddMenuFeature();
 
     var app = builder.Build();
 
+    // 最先掛載例外攔截中介軟體，確保後續任何未處理例外都能被捕捉
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+    // 提供 Vue 前端靜態檔（由 Vite build 產生後放置於 wwwroot）
     app.UseDefaultFiles();
     app.UseStaticFiles();
 
@@ -93,13 +110,16 @@ try
     }
 
     app.UseHttpsRedirection();
+    // 記錄每個 HTTP 請求的基本資訊（method、path、status、elapsed）
     app.UseSerilogRequestLogging();
 
+    // 注意順序：Authentication 必須在 Authorization 之前
     app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllers();
 
+    // SPA fallback：所有非 API 的路徑都回傳 index.html，讓 Vue Router 接管
     app.MapFallbackToFile("/index.html");
 
     app.Run();

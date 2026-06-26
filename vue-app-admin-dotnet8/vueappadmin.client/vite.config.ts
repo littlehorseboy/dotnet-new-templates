@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import plugin from '@vitejs/plugin-vue';
 import fs from 'fs';
 import path from 'path';
@@ -50,6 +50,10 @@ export default defineConfig({
         }
     },
     base: env.VITE_DEFINECONFIG_BASE ?? '/',
+    test: {
+        environment: 'happy-dom',
+        globals: true,
+    },
     server: {
         proxy: {
             '^/api': {

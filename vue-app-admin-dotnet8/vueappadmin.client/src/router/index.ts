@@ -8,6 +8,7 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: () => import('@/views/LoginView.vue'),
+            // noAuthRequired: true → navigation guard 跳過驗證
             meta: { noAuthRequired: true, title: '登入' }
         },
         {
@@ -38,6 +39,7 @@ const router = createRouter({
     ]
 });
 
+// 路由保護：未登入時重導至 /login；已登入時不允許進入 /login
 router.beforeEach((to) => {
     const authStore = useAuthStore();
 
@@ -50,6 +52,7 @@ router.beforeEach((to) => {
     }
 });
 
+// 路由切換後更新瀏覽器標題
 router.afterEach((to) => {
     const title = to.meta.title;
     document.title = title ? `${title} | VueAppAdmin` : 'VueAppAdmin';

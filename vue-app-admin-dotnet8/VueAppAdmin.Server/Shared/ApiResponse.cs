@@ -1,10 +1,14 @@
 namespace VueAppAdmin.Server.Shared;
 
+// 統一 API 回應格式，所有 Controller 回傳值均包在此型別內
+// Result 與 Results 擇一使用：單筆資料用 Result，清單用 Results
 public class ApiResponse<T>
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
+    // 單筆結果
     public T? Result { get; set; }
+    // 多筆結果集合
     public IEnumerable<T>? Results { get; set; }
 
     public static ApiResponse<T> Ok(T result, string? message = null)

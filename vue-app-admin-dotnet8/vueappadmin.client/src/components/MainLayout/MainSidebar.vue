@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { getMenuItems } from '@/api/menu.api';
+import type { MenuNode } from '@/types/api';
+import SidebarMenuItem from './SidebarMenuItem.vue';
 
-const router = useRouter();
+const menuNodes = ref<MenuNode[]>([]);
 
-const sidebarRoutes = router.getRoutes().filter(
-    (r) => r.meta.showInSidebar === true
-);
+// 掛載時向後端請求依使用者權限過濾後的選單，後端依 JWT claims 中的 features 過濾
+onMounted(async () => {
+    menuNodes.value = await getMenuItems();
+});
 </script>
 
 <template>
     <nav class="border-end">
         <ul class="nav flex-column pt-3">
-            <li v-for="route in sidebarRoutes" :key="route.path" class="nav-item">
-                <RouterLink
-                    :to="route.path"
-                    class="nav-link text-body d-flex align-items-center gap-2"
-                    active-class="fw-bold text-primary"
-                >
-                    <i v-if="route.meta.sidebarIcon" class="bi" :class="route.meta.sidebarIcon"></i>
-                    {{ route.meta.sidebarLabel }}
-                </RouterLink>
-            </li>
+            <!-- SidebarMenuItem 支援遞迴渲染，可處理多層巢狀選單 -->
+            <SidebarMenuItem v-for="node in menuNodes" :key="node.id" :node="node" />
         </ul>
     </nav>
 </template>

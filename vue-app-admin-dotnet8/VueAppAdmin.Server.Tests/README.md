@@ -30,16 +30,22 @@ dotnet test --collect:"XPlat Code Coverage"
 ```
 VueAppAdmin.Server.Tests/
 └── Features/
-    └── Auth/
-        └── AuthServiceTests.cs
+    ├── Auth/
+    │   └── AuthServiceTests.cs
+    ├── ExampleItems/
+    │   └── ExampleItemsServiceTests.cs
+    ├── ExampleCategories/
+    │   └── ExampleCategoriesServiceTests.cs
+    └── Menu/
+        └── MenuServiceTests.cs
 ```
 
 新增測試時，請依照 feature 資料夾放置，例如：
 
 ```
 Features/
-└── ExampleItems/
-    └── ExampleItemsServiceTests.cs
+└── Products/
+    └── ProductsServiceTests.cs
 ```
 
 ## 撰寫慣例

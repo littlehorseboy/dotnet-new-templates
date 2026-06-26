@@ -1,15 +1,9 @@
 import apiClient from '@/lib/axios';
-import type { ApiPagedResponse, ApiResponse, ItemResponse } from '@/types/api';
+import type { ApiPagedResponse, ApiResponse, ExampleItemsSearchRequest, ItemResponse } from '@/types/api';
 
-export interface GetItemsParams {
-    skip: number;
-    top: number;
-    sortField: string;
-    sortOrder: string;
-}
-
-export async function getAllItems(params: GetItemsParams): Promise<{ items: ItemResponse[]; total: number }> {
-    const { data } = await apiClient.get<ApiPagedResponse<ItemResponse>>('/api/ExampleItems', { params });
+// 分頁搜尋，回傳當頁資料與總筆數（供前端計算總頁數）
+export async function searchItems(request: ExampleItemsSearchRequest): Promise<{ items: ItemResponse[]; total: number }> {
+    const { data } = await apiClient.post<ApiPagedResponse<ItemResponse>>('/api/ExampleItems/Search', request);
     return { items: data.results ?? [], total: data.total };
 }
 

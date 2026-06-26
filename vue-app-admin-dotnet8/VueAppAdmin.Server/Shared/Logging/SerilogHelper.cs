@@ -9,7 +9,7 @@ public static class SerilogHelper
 
     // 在 Program.cs 最頂端呼叫，設定 Log.Logger（靜態 logger）
     // 用於 DI 建立前的 bootstrap log 及應用程式崩潰時的 Log.Fatal
-    // 寫入 logs/log-.txt
+    // 寫入 logs/log-.txt；保留天數 365 天（此為 bootstrap logger，無法讀取設定檔）
     public static void Initialize()
     {
         var logger = new LoggerConfiguration()

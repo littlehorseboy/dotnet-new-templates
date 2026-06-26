@@ -32,6 +32,9 @@ pnpm run build
 
 # Lint 修正
 pnpm run lint
+
+# 執行測試（--run 為非 watch mode，執行完畢後自動結束，不卡住 terminal）
+npm run test -- --run
 ```
 
 > **注意**：`pnpm run dev` 會自動以 `dotnet dev-certs` 產生 HTTPS 憑證。
@@ -43,7 +46,10 @@ pnpm run lint
 src/
 ├── api/                    # API 呼叫模組（每個 feature 一個檔案）
 │   ├── auth.api.ts
-│   └── example-items.api.ts
+│   ├── example-items.api.ts
+│   ├── example-categories.api.ts
+│   ├── menu.api.ts
+│   └── features.api.ts
 ├── components/
 │   ├── MainLayout/
 │   │   ├── MainHeader.vue

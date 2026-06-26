@@ -19,6 +19,7 @@ function logout() {
     <header class="navbar navbar-expand px-3 border-bottom bg-body-tertiary">
         <span class="navbar-brand mb-0 h1">VueAppAdmin</span>
         <div class="ms-auto d-flex align-items-center gap-3">
+            <!-- 深淺色切換按鈕：圖示跟隨目前模式變化 -->
             <button class="btn btn-link text-body-secondary p-0" @click="toggle" :title="isDark ? '切換淺色模式' : '切換深色模式'">
                 <i :class="isDark ? 'bi bi-sun' : 'bi bi-moon-stars-fill'" style="font-size: 1.1rem;"></i>
             </button>

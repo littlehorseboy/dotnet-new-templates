@@ -15,6 +15,7 @@ const userInfoStore = useUserInfoStore();
 const loginError = ref('');
 const isSubmitting = ref(false);
 
+// 使用 vee-validate + yup 進行表單驗證
 const { handleSubmit, defineField, errors } = useForm({
     validationSchema: object({
         username: string().required('帳號為必填'),
@@ -25,6 +26,7 @@ const { handleSubmit, defineField, errors } = useForm({
 const [username, usernameAttrs] = defineField('username');
 const [password, passwordAttrs] = defineField('password');
 
+// 登入流程：呼叫 API → 儲存 Token → 預先載入使用者資訊 → 跳轉 dashboard
 const onSubmit = handleSubmit(async (values) => {
     loginError.value = '';
     isSubmitting.value = true;

@@ -19,12 +19,16 @@ VueAppAdmin.Server/
 │   │   ├── IAuthService.cs
 │   │   ├── IUserRepository.cs
 │   │   └── UserRepository.cs # Dapper，SQL 集中於此
-│   └── ExampleItems/         # 示範用 Feature（in-memory，無 DB）
-│       ├── Responses/
-│       ├── ExampleItemsController.cs
-│       ├── ExampleItemsExtensions.cs
-│       ├── ExampleItemsService.cs
-│       └── IExampleItemsService.cs
+│   ├── ExampleItems/         # 示範用 Feature（in-memory，無 DB）
+│   │   ├── Requests/
+│   │   ├── Responses/
+│   │   ├── ExampleItemsController.cs
+│   │   ├── ExampleItemsExtensions.cs
+│   │   ├── ExampleItemsService.cs
+│   │   └── IExampleItemsService.cs
+│   ├── ExampleCategories/    # 示範用類別 Feature（in-memory）
+│   ├── FeatureList/          # 功能識別字清單 Feature
+│   └── Menu/                 # 選單（依使用者 features 過濾）
 ├── Shared/
 │   ├── ApiResponse.cs        # 統一回傳型別 ApiResponse<T>
 │   ├── Database/             # IDbConnection Scoped 註冊
@@ -52,7 +56,12 @@ VueAppAdmin.Server/
   },
   "Jwt": {
     "Issuer": "VueAppAdmin",
-    "SignKey": "REPLACE_WITH_A_STRONG_SECRET_KEY_AT_LEAST_32_CHARS"
+    "SignKey": "REPLACE_WITH_A_STRONG_SECRET_KEY_AT_LEAST_32_CHARS",
+    "TokenExpirationHours": 8
+  },
+  "Logging": {
+    "LogLevel": { "Default": "Information" },
+    "RetentionDays": 365
   }
 }
 ```
@@ -81,10 +90,13 @@ Swagger UI：`https://localhost:7173/swagger`（Development 環境）
 
 | Method | 路徑 | 說明 |
 |--------|------|------|
-| POST | `/api/auth/login` | 登入，回傳 Token |
-| GET | `/api/auth/me` | 取得目前登入者資訊 |
-| GET | `/api/exampleitems` | 取得範例清單 |
-| GET | `/api/exampleitems/{id}` | 取得單筆範例 |
+| POST | `/api/Auth/Login` | 登入，回傳 Token |
+| GET | `/api/Auth/Me` | 取得目前登入者資訊（username、groups、features） |
+| POST | `/api/ExampleItems/Search` | 分頁搜尋範例清單（含篩選、排序） |
+| GET | `/api/ExampleItems/{id}` | 取得單筆範例 |
+| POST | `/api/ExampleCategories` | 取得所有類別清單 |
+| GET | `/api/Features` | 取得系統所有功能識別字清單 |
+| POST | `/api/Menu/Items` | 取得依使用者功能過濾後的選單樹 |
 
 ### 回傳格式 `ApiResponse<T>`
 

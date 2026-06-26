@@ -9,12 +9,14 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 
 const router = useRouter();
 
+// 路由開始切換：顯示進度條並快速推進到 30%，再延遲推進到 70%（模擬載入中）
 router.beforeEach(() => {
     visible.value = true;
     width.value = 30;
     timer = setTimeout(() => { width.value = 70; }, 200);
 });
 
+// 路由切換完成：推進到 100% 後短暫延遲隱藏，讓使用者能看到完成動畫
 router.afterEach(() => {
     if (timer) clearTimeout(timer);
     width.value = 100;
