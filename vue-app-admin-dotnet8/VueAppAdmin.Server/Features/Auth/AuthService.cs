@@ -15,7 +15,10 @@ public class AuthService : IAuthService
         // TODO: 替換為資料庫查詢
         // 正式版本應先取得使用者的 PasswordHash，再用 BCrypt 驗證
         var knownUsers = new[] { "admin", "viewer" };
-        return knownUsers.Contains(username) && password == "password";
+        var result = knownUsers.Contains(username) && password == "password";
+
+        // TODO: 登入紀錄存表 — 將登入嘗試（帳號、結果、IP、時間）寫入 LoginLogs 資料表，供稽核查閱
+        return result;
     }
 
     // TODO: 替換為資料庫查詢（UserRepository.FindDisplayNameByUsername）

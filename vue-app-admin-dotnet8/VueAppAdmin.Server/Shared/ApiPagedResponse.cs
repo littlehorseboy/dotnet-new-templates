@@ -8,4 +8,8 @@ public class ApiPagedResponse<T> : ApiResponse<T>
 
     public static ApiPagedResponse<T> OkPaged(IEnumerable<T> results, int total)
         => new() { Success = true, Results = results, Total = total };
+
+    // 分頁資料量大，log 只記摘要；完整 items 待未來 ApiLogs 存表時保存
+    public override object ToLogSummary()
+        => new { Success, Total, Count = Results?.Count() ?? 0 };
 }

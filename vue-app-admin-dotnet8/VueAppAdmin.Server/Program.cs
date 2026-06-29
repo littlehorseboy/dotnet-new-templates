@@ -37,6 +37,7 @@ try
     builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
+        options.Filters.Add(new ApiLogFilter());
     })
     .AddNewtonsoftJson()
     .ConfigureApiBehaviorOptions(options =>
@@ -44,17 +45,14 @@ try
         // 覆寫預設的 Model Validation 回應格式，統一為 ApiResponse
         options.InvalidModelStateResponseFactory = context =>
         {
-            var logger = context.HttpContext.RequestServices
-                .GetRequiredService<ILogger<Program>>();
-
             var errors = context.ModelState
                 .Where(x => x.Value?.Errors.Count > 0)
                 .ToDictionary(
                     x => x.Key,
                     x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
 
-            logger.LogWarning("Validation failed {Path} {StatusCode} {@ValidationErrors}",
-                context.HttpContext.Request.Path, 400, errors);
+            // 供 ApiLogFilter 取用，統一由 filter 記錄 log
+            context.HttpContext.Items[ApiLogFilter.ValidationErrorsKey] = errors;
 
             return new BadRequestObjectResult(ApiResponse<object>.Fail("驗證失敗"));
         };
