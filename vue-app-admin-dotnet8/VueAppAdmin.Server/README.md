@@ -33,7 +33,7 @@ VueAppAdmin.Server/
 │   ├── ApiResponse.cs        # 統一回傳型別 ApiResponse<T>
 │   ├── Database/             # IDbConnection Scoped 註冊
 │   ├── Jwt/                  # JWT 設定、IJwtService、JwtExtensions
-│   ├── Logging/              # SerilogHelper
+│   ├── Logging/              # SerilogHelper、ApiLogFilter、LogMaskAttribute
 │   └── Middleware/           # ExceptionHandlingMiddleware
 └── Program.cs
 ```
@@ -51,6 +51,14 @@ VueAppAdmin.Server/
 
 ```json
 {
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft.AspNetCore": "Warning"
+      }
+    }
+  },
   "ConnectionStrings": {
     "Default": "Server=localhost;Database=VueAppAdmin;..."
   },
@@ -60,7 +68,6 @@ VueAppAdmin.Server/
     "TokenExpirationHours": 8
   },
   "Logging": {
-    "LogLevel": { "Default": "Information" },
     "RetentionDays": 365
   }
 }
@@ -117,8 +124,51 @@ Swagger UI：`https://localhost:7173/swagger`（Development 環境）
 
 | 檔案 | 內容 |
 |------|------|
-| `logs/log-system-<date>.txt` | 所有 log，含 framework（DI `ILogger<T>`） |
+| `logs/log-system-<date>.txt` | 系統層 log，含 framework 訊息（DI `ILogger<T>`） |
 | `logs/log-<date>.txt` | 靜態 `Log.*`，用於啟動與崩潰記錄 |
+| `logs/ApiLogFilter/ApiLogFilter-<date>.txt` | API 請求 / 回應記錄（獨立檔案） |
+
+### Log Level 設定
+
+Log level 透過 `appsettings.json` 的 `Serilog:MinimumLevel` 控制：
+
+```json
+"Serilog": {
+  "MinimumLevel": {
+    "Default": "Information",   // 全域預設等級
+    "Override": {
+      "Microsoft.AspNetCore": "Warning"  // 指定 namespace 覆寫等級
+    }
+  }
+}
+```
+
+`appsettings.Development.json` 可將 `Default` 設為 `Debug`，開發時取得更細的 log 輸出。
+
+可用等級由低到高：`Verbose` → `Debug` → `Information` → `Warning` → `Error` → `Fatal`
+
+> **注意**：應用程式啟動初期（DI 容器建立之前）使用的 bootstrap logger（`SerilogHelper.Initialize()`）固定為 `Information` 等級，不受 appsettings 設定影響。這是 Serilog 兩階段初始化的已知限制。
+
+### API 全域 Log（ApiLogFilter）
+
+所有 API 端點自動記錄，涵蓋三個案例：
+
+| 案例 | Level | 格式 |
+|------|-------|------|
+| 正常流程（2xx、4xx 業務錯誤） | INF | `[API] {Method} {Path} \| user:{User} \| {StatusCode} \| req:{...} \| res:{...} \| {N}ms` |
+| 401 授權短路 | WRN | 同上，`req` 與 `res` 為 `null` |
+| 400 驗證失敗 | WRN | 同上，`res` 顯示驗證錯誤欄位 |
+
+**敏感欄位遮罩**：在 Request 類別的屬性加上 `[LogMask]`，該欄位在 log 中顯示為 `***`。
+
+```csharp
+[LogMask]
+public string Password { get; set; }
+```
+
+**分頁回應精簡**：`ApiPagedResponse<T>` 的 `res` 只記錄 `{ success, total, count }`，不含完整 items 清單。
+
+> TODO：未來 `ApiLogs` 存表功能實作後，可在 `ApiResponse<T>.ToLogSummary()` 切換為精簡格式，完整 payload 改由資料庫保存。
 
 ### 為特定服務建立獨立 log 資料夾
 

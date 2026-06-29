@@ -24,8 +24,9 @@ try
     var logRetentionDays = builder.Configuration.GetValue<int>("Logging:RetentionDays", 365);
 
     // system logger：記錄 HTTP 請求與應用程式層級事件，獨立於各 feature 的 logger
+    // MinimumLevel 由 appsettings.json 的 Serilog:MinimumLevel 控制（Development 預設 Debug，Production 預設 Information）
     var systemLogger = new LoggerConfiguration()
-        .MinimumLevel.Information()
+        .ReadFrom.Configuration(builder.Configuration)
         .WriteTo.Console()
         .WriteTo.File("logs/log-system-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: logRetentionDays)
         .CreateLogger();
