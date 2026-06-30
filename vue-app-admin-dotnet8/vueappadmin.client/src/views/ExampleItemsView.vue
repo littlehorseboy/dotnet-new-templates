@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import { searchItems } from '@/api/example-items.api';
 import { getExampleCategories } from '@/api/example-categories.api';
@@ -25,9 +26,6 @@ const lazyParams = ref({
     sortField: 'id',
     sortOrder: 'asc',
 });
-
-// 文字篩選 debounce timer，避免每次按鍵都送出 API 請求
-let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 function buildRequest(): ExampleItemsSearchRequest {
     const { first, rows, sortField, sortOrder } = lazyParams.value;
@@ -56,17 +54,7 @@ async function loadItems() {
     }
 }
 
-// 文字欄位變更：300ms debounce 後重設到第一頁並重新查詢
-function onFilterChange() {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-        lazyParams.value.first = 0;
-        loadItems();
-    }, 300);
-}
-
-// 類別多選變更：立即重設到第一頁並重新查詢（不 debounce）
-function onCategoryChange() {
+function onSearch() {
     lazyParams.value.first = 0;
     loadItems();
 }
@@ -89,29 +77,29 @@ onMounted(async () => {
     categories.value = await getExampleCategories();
     await loadItems();
 });
+
+defineExpose({ items, loading, error, categories, onPage, onSort, onSearch });
 </script>
 
 <template>
     <div>
         <h2 class="mb-3">Example Items</h2>
 
-        <div class="row g-2 mb-3">
-            <div class="col-12 col-md-4">
-                <input
+        <div class="row g-2 mb-3 align-items-center">
+            <div class="col-12 col-md-3">
+                <InputText
                     v-model="filterName"
-                    type="text"
-                    class="form-control form-control-sm"
                     placeholder="名稱搜尋..."
-                    @input="onFilterChange"
+                    class="w-100"
+                    @keyup.enter="onSearch"
                 />
             </div>
-            <div class="col-12 col-md-4">
-                <input
+            <div class="col-12 col-md-3">
+                <InputText
                     v-model="filterDescription"
-                    type="text"
-                    class="form-control form-control-sm"
                     placeholder="說明搜尋..."
-                    @input="onFilterChange"
+                    class="w-100"
+                    @keyup.enter="onSearch"
                 />
             </div>
             <div class="col-12 col-md-4">
@@ -121,8 +109,10 @@ onMounted(async () => {
                     optionLabel="name"
                     placeholder="選擇類別..."
                     class="w-100"
-                    @change="onCategoryChange"
                 />
+            </div>
+            <div class="col-12 col-md-2">
+                <button class="btn btn-primary w-100" @click="onSearch">查詢</button>
             </div>
         </div>
 
