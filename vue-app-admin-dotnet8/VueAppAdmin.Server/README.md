@@ -99,7 +99,7 @@ Swagger UI：`https://localhost:7173/swagger`（Development 環境）
 |--------|------|------|
 | POST | `/api/Auth/Login` | 登入，回傳 Token |
 | GET | `/api/Auth/Me` | 取得目前登入者資訊（username、groups、features） |
-| POST | `/api/ExampleItems/Search` | 分頁搜尋範例清單（含篩選、排序） |
+| POST | `/api/ExampleItems/Search` | 分頁搜尋範例清單（含篩選、日期區間查詢、全欄位排序） |
 | GET | `/api/ExampleItems/{id}` | 取得單筆範例 |
 | POST | `/api/ExampleCategories` | 取得所有類別清單 |
 | GET | `/api/Features` | 取得系統所有功能識別字清單 |

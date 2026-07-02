@@ -17,7 +17,7 @@ const mockCategories: ExampleCategoryResponse[] = [
 ];
 
 const mockItems: ItemResponse[] = [
-    { id: 1, name: 'Item 1', description: 'Desc 1', categoryId: 1, categoryName: 'Category A' },
+    { id: 1, name: 'Item 1', description: 'Desc 1', categoryId: 1, categoryName: 'Category A', createdDate: '2026-06-01T00:00:00' },
 ];
 
 function mountComponent() {
@@ -28,6 +28,7 @@ function mountComponent() {
                 DataTable: true,
                 Column: true,
                 MultiSelect: true,
+                DatePicker: true,
             },
         },
     });

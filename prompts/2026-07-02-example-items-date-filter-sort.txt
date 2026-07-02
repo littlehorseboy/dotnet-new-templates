@@ -1,0 +1,24 @@
+D:\AgenticAI\dotnet-new-templates\vue-app-admin-dotnet8
+
+我有一些想法
+
+example-items 這一個畫面的應用
+
+我想要在列表多建立日期的欄位
+
+那也需要日期的選擇器當查詢條件
+
+還有要讓所有欄位都能夠排序
+
+然後現在沒有實際用 SQL
+
+但我未來的 SQL 會是要用 SQL Server 的 OFFSET FETCH 這種
+
+你能寫個範例放到註解嗎?
+
+因為現在這種假資料不太能想像會如何用 Dapper 寫 SQL 來應用
+
+
+日期篩選起訖區間
+
+TODO 註解的形式放進 ExampleItemsService.cs

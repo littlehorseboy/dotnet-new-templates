@@ -59,13 +59,14 @@ export interface ItemResponse {
     description: string;
     categoryId: number;
     categoryName: string;
+    createdDate: string;
 }
 
 export interface ExampleItemsSearchRequest {
     // 從 1 開始
     page: number;
     pageSize: number;
-    // 排序欄位：id / name / description
+    // 排序欄位：id / name / description / categoryName / createdDate
     sortField: string;
     // 排序方向：asc / desc
     sortOrder: string;
@@ -73,4 +74,7 @@ export interface ExampleItemsSearchRequest {
     description?: string;
     // 多選類別過濾；空陣列表示不限類別
     categoryIds: number[];
+    // createdDate 查詢區間（含首尾兩端點）；僅帶一端代表開放區間
+    dateFrom?: string;
+    dateTo?: string;
 }

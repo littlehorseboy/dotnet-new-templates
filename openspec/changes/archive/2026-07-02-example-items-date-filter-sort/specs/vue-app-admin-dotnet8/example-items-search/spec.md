@@ -1,13 +1,46 @@
 ## ADDED Requirements
 
-### Requirement: ItemResponse 加入類別欄位
+### Requirement: ItemResponse 加入建立日期欄位
 
-`ItemResponse` SHALL 包含 `categoryId: int` 與 `categoryName: string`。30 筆 in-memory 資料各自指定 categoryId（1、2、3 隨意分配）。
+`ItemResponse` SHALL 包含 `createdDate: DateTime` 欄位。30 筆 in-memory 假資料 SHALL 各自指定不同的 `createdDate`（以 `DateTime.Today.AddDays(-i)` 依索引遞減，避免全部同一天導致排序與區間篩選無法驗證）。
 
-#### Scenario: 單筆查詢包含類別資訊
+#### Scenario: 單筆查詢包含建立日期
 
 - **WHEN** 呼叫 `GET /api/ExampleItems/{id}`
-- **THEN** response 包含 `categoryId` 與 `categoryName` 欄位
+- **THEN** response 包含 `createdDate` 欄位
+
+#### Scenario: 假資料日期彼此不同
+
+- **WHEN** 檢視 in-memory 假資料清單
+- **THEN** 30 筆資料的 `createdDate` 至少涵蓋 30 個不同日期
+
+---
+
+### Requirement: 排序支援所有欄位
+
+`POST /api/ExampleItems/Search` 的 `sortField` SHALL 支援 `id`、`name`、`description`、`categoryName`、`createdDate` 五個欄位的排序，每個欄位皆 SHALL 同時支援 `sortOrder: "asc"` 與 `"desc"`。`sortField` 為未知字串時 SHALL fallback 為 `id` 排序（維持既有行為）。
+
+#### Scenario: 依類別名稱排序
+
+- **WHEN** body 包含 `"sortField": "categoryName", "sortOrder": "asc"`
+- **THEN** 回傳結果依 `categoryName` 字母順序遞增排列
+
+#### Scenario: 依建立日期排序
+
+- **WHEN** body 包含 `"sortField": "createdDate", "sortOrder": "desc"`
+- **THEN** 回傳結果依 `createdDate` 由新到舊排列
+
+#### Scenario: 依 Id 排序
+
+- **WHEN** body 包含 `"sortField": "id", "sortOrder": "desc"`
+- **THEN** 回傳結果依 `id` 由大到小排列
+
+#### Scenario: 未知排序欄位 fallback 為 id
+
+- **WHEN** body 包含 `"sortField": "unknown-field"`
+- **THEN** 回傳結果依 `id` 排序（不拋錯）
+
+## MODIFIED Requirements
 
 ### Requirement: POST /api/ExampleItems/Search
 
@@ -74,6 +107,8 @@
 - **WHEN** body 同時包含 `name` 模糊條件與 `dateFrom`/`dateTo`
 - **THEN** 回傳同時符合名稱條件與日期區間條件的項目
 
+---
+
 ### Requirement: 前端 ExampleItemsView 篩選 UI
 
 `ExampleItemsView.vue` SHALL 在表格上方提供篩選列，包含：
@@ -115,43 +150,7 @@
 - **WHEN** ExampleItemsView 頁面初始化
 - **THEN** 呼叫 `POST /api/ExampleCategories` 並將結果填入 MultiSelect 選項
 
-### Requirement: ItemResponse 加入建立日期欄位
-
-`ItemResponse` SHALL 包含 `createdDate: DateTime` 欄位。30 筆 in-memory 假資料 SHALL 各自指定不同的 `createdDate`（以 `DateTime.Today.AddDays(-i)` 依索引遞減，避免全部同一天導致排序與區間篩選無法驗證）。
-
-#### Scenario: 單筆查詢包含建立日期
-
-- **WHEN** 呼叫 `GET /api/ExampleItems/{id}`
-- **THEN** response 包含 `createdDate` 欄位
-
-#### Scenario: 假資料日期彼此不同
-
-- **WHEN** 檢視 in-memory 假資料清單
-- **THEN** 30 筆資料的 `createdDate` 至少涵蓋 30 個不同日期
-
-### Requirement: 排序支援所有欄位
-
-`POST /api/ExampleItems/Search` 的 `sortField` SHALL 支援 `id`、`name`、`description`、`categoryName`、`createdDate` 五個欄位的排序，每個欄位皆 SHALL 同時支援 `sortOrder: "asc"` 與 `"desc"`。`sortField` 為未知字串時 SHALL fallback 為 `id` 排序（維持既有行為）。
-
-#### Scenario: 依類別名稱排序
-
-- **WHEN** body 包含 `"sortField": "categoryName", "sortOrder": "asc"`
-- **THEN** 回傳結果依 `categoryName` 字母順序遞增排列
-
-#### Scenario: 依建立日期排序
-
-- **WHEN** body 包含 `"sortField": "createdDate", "sortOrder": "desc"`
-- **THEN** 回傳結果依 `createdDate` 由新到舊排列
-
-#### Scenario: 依 Id 排序
-
-- **WHEN** body 包含 `"sortField": "id", "sortOrder": "desc"`
-- **THEN** 回傳結果依 `id` 由大到小排列
-
-#### Scenario: 未知排序欄位 fallback 為 id
-
-- **WHEN** body 包含 `"sortField": "unknown-field"`
-- **THEN** 回傳結果依 `id` 排序（不拋錯）
+---
 
 ### Requirement: ExampleItemsView 表格欄位排序
 
