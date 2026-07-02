@@ -40,7 +40,6 @@ try
         options.Filters.Add(new AuthorizeFilter());
         options.Filters.Add(new ApiLogFilter());
     })
-    .AddNewtonsoftJson()
     .ConfigureApiBehaviorOptions(options =>
     {
         // 覆寫預設的 Model Validation 回應格式，統一為 ApiResponse
