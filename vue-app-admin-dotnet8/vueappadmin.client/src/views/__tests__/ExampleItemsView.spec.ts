@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
+import PrimeVue from 'primevue/config';
 import ExampleItemsView from '../ExampleItemsView.vue';
 import type { ExampleCategoryResponse, ItemResponse } from '@/types/api';
 
@@ -22,6 +23,7 @@ const mockItems: ItemResponse[] = [
 function mountComponent() {
     return mount(ExampleItemsView, {
         global: {
+            plugins: [PrimeVue],
             stubs: {
                 DataTable: true,
                 Column: true,
