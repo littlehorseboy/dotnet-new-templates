@@ -60,6 +60,12 @@ dotnet new install .\<範本目錄>
 - 統一 `ApiResponse<T>` 回應包裝格式；分頁端點另有 `ApiPagedResponse<T>`（含 `Total`，提供 `OkPaged` 工廠方法）
 - ExampleItems 示範 server-side 分頁排序（`skip` / `top` / `sortField` / `sortOrder` query params，PrimeVue DataTable lazy 模式）
 
+**資料庫**
+
+- `db/schema.sql`：SQL Server schema，`Basic_*`（使用者、群組、選單、權限、登入與操作紀錄）與 `Para_*`（參數設定）共 11 張資料表，每個欄位皆有 `MS_Description`
+- `db/seed.sql`：初始資料（admin 帳號、對齊前端路由的選單樹、Administrators 全權限群組）
+- Auth / Menu / FeatureList 目前維持 in-memory dummy 實作；`UserRepository.cs`、`GroupFeatureStore.cs`、`MenuService.cs` 的註解已附上對應 `db/schema.sql` 的完整 Dapper SQL，要接真實資料庫時可直接解開使用
+
 **測試**
 
 - xUnit 測試專案（`VueAppAdmin.Server.Tests`）
@@ -70,8 +76,9 @@ dotnet new install .\<範本目錄>
 
 - 登入後進入 MainLayout（Header + Sidebar 從 `router meta.showInSidebar` / `sidebarIcon` 自動衍生）
 - Header 右上角 dark/light mode 切換按鈕（太陽 / 月亮 icon），PrimeVue 與 Bootstrap 同步切換
-- 帳號 `admin` / 密碼 `password`（範本用，實際使用請替換）
-- `appsettings.json` 的 `Jwt:SignKey` 需替換為正式金鑰
+- 帳號 `admin` / 密碼 `password`（in-memory dummy 登入用；接上 `db/seed.sql` 後的 DB 帳號為 `admin` / `Admin@123`，兩者皆僅供開發使用，正式環境請務必更改）
+- `appsettings.json` 的 `Jwt:SignKey` 於 `dotnet new` 產生專案時已自動置換為「專案名稱 + 隨機值」，不同專案彼此不同；正式上線建議改由 Secret 管理機制提供
+- 產生專案後，終端機會顯示下一步指引（`npm install`；以及選用的資料庫建置步驟：執行 `db/schema.sql` 與 `db/seed.sql`）
 
 **前置需求**
 

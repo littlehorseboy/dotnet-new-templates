@@ -1,0 +1,624 @@
+3 先說，應該可以用專案名稱來取代那個方式寫 JWT secret 吧
+我不知道 postActions 是啥
+1 資料庫要提供 schema 喔
+我自己有一些喜歡的命名
+
+CREATE TABLE [dbo].[Basic_Api_Change_Log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Actions] [nvarchar](50) NOT NULL,
+	[ModulesNames] [nvarchar](200) NOT NULL,
+	[BeforeDatas] [nvarchar](max) NULL,
+	[AfterDatas] [nvarchar](max) NULL,
+	[SQLStr] [nvarchar](max) NULL,
+	[CreateUserRowId] [uniqueidentifier] NULL,
+	[CreateDate] [datetime] NULL,
+ CONSTRAINT [PK_Basic_Api_Change_Log] PRIMARY KEY CLUSTERED 
+(
+	[id] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Api_Change_Log] ADD  CONSTRAINT [DF_Basic_Api_Change_Log_CreateDate]  DEFAULT (getdate()) FOR [CreateDate]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'動作(ADD,MODIFY,DELETE)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'Actions'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'ModulesNames'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'異動前資料' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'BeforeDatas'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'異動後資料' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'AfterDatas'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'SQL語法' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'SQLStr'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立者(關聯Basic_Users)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'CreateUserRowId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'CreateDate'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'系統紀錄表' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log'
+GO
+
+CREATE TABLE [dbo].[Basic_Api_Log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[Actions] [nvarchar](50) NOT NULL,
+	[ModulesNames] [nvarchar](200) NOT NULL,
+	[Datas] [nvarchar](max) NULL,
+	[GroupGuid] [uniqueidentifier] NULL,
+	[CreateUserRowId] [uniqueidentifier] NULL,
+	[CreateDate] [datetime] NULL,
+ CONSTRAINT [PK_Basic_Api_Log] PRIMARY KEY CLUSTERED 
+(
+	[id] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Api_Log] ADD  CONSTRAINT [DF_Basic_Api_Log_CreateDate]  DEFAULT (getdate()) FOR [CreateDate]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'動作(REQUEST,RESPONSE,EXCEPTION,SCHEDULE)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Actions'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'ModulesNames'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'資料' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Datas'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組 Guid' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'GroupGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立者(關聯Basic_Users)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'CreateUserRowId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'CreateDate'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'API服務LOG' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log'
+GO
+
+
+CREATE TABLE [dbo].[Basic_LoginLog](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[LoginTime] [datetime] NOT NULL,
+	[SourceIP] [varchar](50) NOT NULL,
+	[InputUserAccount] [varchar](40) NULL,
+	[LoginUserGuid] [varchar](40) NOT NULL,
+	[LoginMethod] [int] NULL,
+	[Device] [int] NULL,
+	[ResponseMessage] [int] NULL,
+ CONSTRAINT [PK__LoginLog__3214EC073904DAEE] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_LoginLog] ADD  CONSTRAINT [DF__LoginLog__LoginT__6D0D32F4]  DEFAULT (getdate()) FOR [LoginTime]
+GO
+
+ALTER TABLE [dbo].[Basic_LoginLog] ADD  CONSTRAINT [DF_Basic_LoginLog_Device]  DEFAULT ((2)) FOR [Device]
+GO
+
+ALTER TABLE [dbo].[Basic_LoginLog]  WITH CHECK ADD  CONSTRAINT [FK_Basic_LoginLog_Basic_LoginLog] FOREIGN KEY([Id])
+REFERENCES [dbo].[Basic_LoginLog] ([Id])
+GO
+
+ALTER TABLE [dbo].[Basic_LoginLog] CHECK CONSTRAINT [FK_Basic_LoginLog_Basic_LoginLog]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'LoginTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'來源IP' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'SourceIP'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'輸入帳號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'InputUserAccount'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'登入帳號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'LoginUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'登入方法，來源：參數設定：1：公務入口、2：一般帳號、3：自然人憑證、4：行動自然人憑證' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'LoginMethod'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'裝置，來源：參數設定：1：APP、2：WEB' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'Device'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'回應訊息，來源：參數設定：0：失敗、1：成功' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_LoginLog', @level2type=N'COLUMN',@level2name=N'ResponseMessage'
+GO
+
+CREATE TABLE [dbo].[Basic_Groups](
+	[GroupId] [int] IDENTITY(1,1) NOT NULL,
+	[GroupName] [nvarchar](20) NOT NULL,
+	[Remark] [nvarchar](400) NULL,
+	[Status] [int] NULL,
+	[SortOrder] [int] NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedUserGuid] [uniqueidentifier] NULL,
+	[ModifiedTime] [datetime] NULL,
+ CONSTRAINT [PK__Basic_Gr__149AF36AA3B52F15] PRIMARY KEY CLUSTERED 
+(
+	[GroupId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Groups] ADD  CONSTRAINT [DF_Basic_Groups_Remark]  DEFAULT ('') FOR [Remark]
+GO
+
+ALTER TABLE [dbo].[Basic_Groups] ADD  CONSTRAINT [DF__Basic_Gro__Creat__5812160E]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+ALTER TABLE [dbo].[Basic_Groups]  WITH CHECK ADD  CONSTRAINT [FK_Basic_Groups_Basic_Users] FOREIGN KEY([CreatedUserGuid])
+REFERENCES [dbo].[Basic_Users] ([UserGuid])
+GO
+
+ALTER TABLE [dbo].[Basic_Groups] CHECK CONSTRAINT [FK_Basic_Groups_Basic_Users]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'GroupId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'GroupName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'備註' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'Remark'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'狀態，來源：參數設定：0：停用、1：啟用' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'Status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'SortOrder'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'ModifiedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Groups', @level2type=N'COLUMN',@level2name=N'ModifiedTime'
+GO
+
+
+CREATE TABLE [dbo].[Basic_Group_Modules](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GroupId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[ViewStatus] [int] NOT NULL,
+	[AddStatus] [int] NOT NULL,
+	[EditStatus] [int] NOT NULL,
+	[DelStatus] [int] NOT NULL,
+	[DownloadStatus] [int] NOT NULL,
+	[SortOrder] [int] NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedUserGuid] [uniqueidentifier] NULL,
+	[ModifiedTime] [datetime] NULL,
+ CONSTRAINT [PK__Basic_Gr__3214EC071187F195] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF_Basic_Group_Modules_ViewStatus]  DEFAULT ((0)) FOR [ViewStatus]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF_Basic_Group_Modules_AddStatus]  DEFAULT ((0)) FOR [AddStatus]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF_Basic_Group_Modules_EditStatus]  DEFAULT ((0)) FOR [EditStatus]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF_Basic_Group_Modules_DelStatus]  DEFAULT ((0)) FOR [DelStatus]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF_Basic_Group_Modules_DownloadStatus]  DEFAULT ((0)) FOR [DownloadStatus]
+GO
+
+ALTER TABLE [dbo].[Basic_Group_Modules] ADD  CONSTRAINT [DF__Basic_Gro__Creat__5AEE82B9]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'權限編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組編號，來源：群組->群組編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'GroupId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能編號，來源：功能->功能編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'ModuleId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'查詢權限 (0:否 1:是)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'ViewStatus'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'新增權限 (0:否 1:是)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'AddStatus'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改權限 (0:否 1:是)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'EditStatus'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'刪除權限 (0:否 1:是)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'DelStatus'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'下載權限 (0:否 1:是)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'DownloadStatus'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'SortOrder'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'ModifiedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Group_Modules', @level2type=N'COLUMN',@level2name=N'ModifiedTime'
+GO
+
+
+CREATE TABLE [dbo].[Basic_Modules](
+	[ModuleId] [int] IDENTITY(1,1) NOT NULL,
+	[FatherModuleId] [int] NULL,
+	[ModuleName] [nvarchar](50) NOT NULL,
+	[ModuleLink] [nvarchar](50) NULL,
+	[ModuleIcon] [nvarchar](50) NULL,
+	[SortOrder] [int] NULL,
+	[Status] [int] NOT NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedUserGuid] [uniqueidentifier] NULL,
+	[ModifiedTime] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ModuleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Modules] ADD  DEFAULT ((0)) FOR [Status]
+GO
+
+ALTER TABLE [dbo].[Basic_Modules] ADD  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModuleId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'父層Id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'FatherModuleId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModuleName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能頁面' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModuleLink'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能圖示' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModuleIcon'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'SortOrder'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'啟用與否，0：停用、1：啟用' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'Status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModifiedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Modules', @level2type=N'COLUMN',@level2name=N'ModifiedTime'
+GO
+
+CREATE TABLE [dbo].[Basic_OperationLog](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[SourceIP] [varchar](50) NOT NULL,
+	[module_id] [int] NOT NULL,
+	[Action] [int] NOT NULL,
+	[ActionName] [varchar](50) NOT NULL,
+	[Result] [int] NOT NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+ CONSTRAINT [PK__Basic_Op__3214EC0719D8CABD] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_OperationLog] ADD  CONSTRAINT [DF__Basic_Ope__Creat__703EA55A]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+ALTER TABLE [dbo].[Basic_OperationLog]  WITH CHECK ADD  CONSTRAINT [FK_Basic_OperationLog_Basic_Users] FOREIGN KEY([CreatedUserGuid])
+REFERENCES [dbo].[Basic_Users] ([UserGuid])
+GO
+
+ALTER TABLE [dbo].[Basic_OperationLog] CHECK CONSTRAINT [FK_Basic_OperationLog_Basic_Users]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序號，自動編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ip' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'SourceIP'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能id，來源：功能->功能ID' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'module_id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'動作，來源：參數設定（1: 新增、2: 修改、3: 刪除、4: 匯出、5: 查詢）' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'Action'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'新增、修改、刪除、匯出、查詢' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'ActionName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'結果，0：失敗、1：成功' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'Result'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_OperationLog', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+CREATE TABLE [dbo].[Basic_Users](
+	[UserGuid] [uniqueidentifier] NOT NULL,
+	[UserName] [nvarchar](20) NOT NULL,
+	[UnitCode] [varchar](20) NOT NULL,
+	[Department] [nvarchar](20) NULL,
+	[Title] [nvarchar](20) NOT NULL,
+	[NormalAccount] [varchar](30) NOT NULL,
+	[NormalPassword] [varchar](30) NULL,
+	[PasswordUpdTime] [datetime] NULL,
+	[PasswordUpdErrorTimes] [int] NULL,
+	[PasswordUpdLockDateTime] [datetime] NULL,
+	[EOfficeAccount] [varchar](30) NULL,
+	[EGovernmentAccount] [varchar](30) NULL,
+	[IdNumber] [varchar](20) NULL,
+	[CanEditAfterApproval] [int] NULL,
+	[CanRevokeEligibility] [int] NULL,
+	[Status] [int] NOT NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedUserGuid] [uniqueidentifier] NULL,
+	[ModifiedTime] [datetime] NULL,
+	[PasswordErrorTimes] [int] NULL,
+	[LockDateTime] [datetime] NULL
+ CONSTRAINT [PK__Basic_Us__99B7F23A0A8D1934] PRIMARY KEY CLUSTERED 
+(
+	[UserGuid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF__Basic_Use__UserG__619B8048]  DEFAULT (newid()) FOR [UserGuid]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF__Basic_Use__Title__628FA481]  DEFAULT (getdate()) FOR [Title]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF_Basic_Users_PasswordUpdTime]  DEFAULT (getdate()) FOR [PasswordUpdTime]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF_Basic_Users_PasswordUpdErrorTimes]  DEFAULT ((0)) FOR [PasswordUpdErrorTimes]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF_Basic_Users_CanEditAfterApproval]  DEFAULT ((0)) FOR [CanEditAfterApproval]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF_Basic_Users_CanRevokeEligibility]  DEFAULT ((0)) FOR [CanRevokeEligibility]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF__Basic_Use__Creat__6383C8BA]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+ALTER TABLE [dbo].[Basic_Users] ADD  CONSTRAINT [DF_Basic_Users_PasswordErrorTimes]  DEFAULT ((0)) FOR [PasswordErrorTimes]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'帳號編號(GuidKey)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'UserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'姓名' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'UserName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'機關代碼' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'UnitCode'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'(棄用，準備被 UnitCode 取代)單位' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'Department'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'職稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'Title'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'一般帳號，不能重複(但有公務帳號可空白)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'NormalAccount'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'一般密碼' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'NormalPassword'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'一般密碼最新異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'PasswordUpdTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'一般密碼異動錯誤次數' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'PasswordUpdErrorTimes'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'一般密碼異動鎖定時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'PasswordUpdLockDateTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'e化公務帳號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'EOfficeAccount'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'e政府帳號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'EGovernmentAccount'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'身分證號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'IdNumber'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否擁有核准後編輯權限，0：否、1：是' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'CanEditAfterApproval'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否擁有取消資格權限，0：否、1：是' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'CanRevokeEligibility'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'狀態，來源：參數設定：-10：待審核、0：停用、1：啟用、40：註銷' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'Status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'ModifiedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最後異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'ModifiedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'帳號錯誤次數' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'PasswordErrorTimes'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'帳號鎖定時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users', @level2type=N'COLUMN',@level2name=N'LockDateTime'
+GO
+
+CREATE TABLE [dbo].[Basic_Users_Groups](
+	[GroupId] [int] NOT NULL,
+	[UserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedUserGuid] [uniqueidentifier] NULL,
+	[CreatedTime] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Basic_Users_Groups] ADD  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組編號，來源：群組->群組編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users_Groups', @level2type=N'COLUMN',@level2name=N'GroupId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users_Groups', @level2type=N'COLUMN',@level2name=N'UserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users_Groups', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Users_Groups', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+CREATE TABLE [dbo].[Para_Categories](
+	[Para_CategoryId] [int] IDENTITY(1,1) NOT NULL,
+	[Para_CategoryKey] [nvarchar](100) NULL,
+	[Para_CategoryName] [nvarchar](255) NULL,
+	[IsHidden] [bit] NULL,
+	[CreatedUserGuid] [uniqueidentifier] NULL,
+	[CreatedTime] [datetime] NULL,
+ CONSTRAINT [PK__Para_Cat__DC8A0D1FD198F30B] PRIMARY KEY CLUSTERED 
+(
+	[Para_CategoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Para_Categories] ADD  CONSTRAINT [DF_Para_Categories_IsHidden]  DEFAULT ((0)) FOR [IsHidden]
+GO
+
+ALTER TABLE [dbo].[Para_Categories] ADD  CONSTRAINT [DF_Para_Categories_CreatedTime]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數類別編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Categories', @level2type=N'COLUMN',@level2name=N'Para_CategoryId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數類別Key，查詢用關鍵字' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Categories', @level2type=N'COLUMN',@level2name=N'Para_CategoryKey'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數類別名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Categories', @level2type=N'COLUMN',@level2name=N'Para_CategoryName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'隱藏，參數設定功能隱藏 0：顯示、1：隱藏' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Categories', @level2type=N'COLUMN',@level2name=N'IsHidden'
+GO
+
+CREATE TABLE [dbo].[Para_Info](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Para_CategoryId] [int] NOT NULL,
+	[ParaName] [nvarchar](100) NOT NULL,
+	[ParaValue] [nvarchar](100) NOT NULL,
+	[SortOrder] [int] NULL,
+	[Status] [int] NULL,
+	[CreatedUserGuid] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NOT NULL,
+	[ModifiedUserGuid] [uniqueidentifier] NULL,
+	[ModifiedTime] [datetime] NULL,
+ CONSTRAINT [PK__Para_Inf__3214EC0765231223] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Para_Info] ADD  CONSTRAINT [DF_Para_Info_Status]  DEFAULT ((1)) FOR [Status]
+GO
+
+ALTER TABLE [dbo].[Para_Info] ADD  CONSTRAINT [DF__Para_Info__Creat__5535A963]  DEFAULT (getdate()) FOR [CreatedTime]
+GO
+
+ALTER TABLE [dbo].[Para_Info]  WITH CHECK ADD  CONSTRAINT [FK_Para_Info_Basic_Users] FOREIGN KEY([CreatedUserGuid])
+REFERENCES [dbo].[Basic_Users] ([UserGuid])
+GO
+
+ALTER TABLE [dbo].[Para_Info] CHECK CONSTRAINT [FK_Para_Info_Basic_Users]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數編號，不可重複' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'Id'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數類別代碼，來源：參數設定類別->類別編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'Para_CategoryId'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'ParaName'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'參數值' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'ParaValue'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'SortOrder'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'狀態，來源：參數設定：0：停用、1：啟用' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'Status'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'CreatedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'CreatedTime'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'異動人員帳號編號，來源：管理人員->帳號編號' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'ModifiedUserGuid'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'異動時間' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Para_Info', @level2type=N'COLUMN',@level2name=N'ModifiedTime'
+GO
+
+
+

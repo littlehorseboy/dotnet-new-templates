@@ -1,6 +1,20 @@
 namespace VueAppAdmin.Server.Features.Menu;
 
 // TODO: 此服務使用靜態樹狀結構定義選單，實際專案應改為資料庫查詢
+// 對應資料表：Basic_Modules（見 db/schema.sql），以 FatherModuleId 建立父子關係。
+//
+// 對應 SQL 查詢（一次取回全部節點，於程式端依 FatherModuleId 組成樹狀結構）：
+//   const string sql = """
+//       SELECT ModuleId AS Id, ModuleName AS Label, ModuleIcon AS Icon,
+//              ModuleLink AS Route, FatherModuleId
+//       FROM Basic_Modules
+//       WHERE Status = 1
+//       ORDER BY FatherModuleId, SortOrder
+//       """;
+//   FatherModuleId IS NULL 的節點為根節點；組樹時遞迴收集 FatherModuleId = 上層 ModuleId
+//   的子節點。權限過濾（RequiredFeature）邏輯不變，接 DB 後改為呼叫
+//   GroupFeatureStore 對應的 SQL（見 GroupFeatureStore.cs 註解）取得使用者可見的
+//   ModuleLink 清單後再比對。
 public class MenuService : IMenuService
 {
     // 完整選單樹，包含所有節點（不論權限）

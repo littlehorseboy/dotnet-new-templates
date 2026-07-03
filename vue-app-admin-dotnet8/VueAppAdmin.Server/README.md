@@ -64,7 +64,7 @@ VueAppAdmin.Server/
   },
   "Jwt": {
     "Issuer": "VueAppAdmin",
-    "SignKey": "REPLACE_WITH_A_STRONG_SECRET_KEY_AT_LEAST_32_CHARS",
+    "SignKey": "VueAppAdmin-REPLACE_WITH_A_STRONG_SECRET_KEY_AT_LEAST_32_CHARS",
     "TokenExpirationHours": 8
   },
   "Logging": {
@@ -73,7 +73,25 @@ VueAppAdmin.Server/
 }
 ```
 
-> **重要**：上線前必須替換 `Jwt:SignKey` 為至少 32 字元的強密鑰。
+> **重要**：`Jwt:SignKey` 在範本目錄本身是固定佔位字串；透過 `dotnet new` 產生專案時，`.template.config/template.json` 的 `JwtSecret` symbol 會自動將其替換為「專案名稱 + 隨機值」，每個產出專案的金鑰皆不相同，無需手動更改。若直接使用本範本目錄開發（未經 `dotnet new` 產生），請自行替換為至少 32 字元的強密鑰。
+
+---
+
+## 資料庫建置（選用）
+
+`Auth` / `Menu` / `FeatureList` 三個 Feature 目前維持 in-memory dummy 實作，**不需要資料庫即可執行**，預設登入帳密為 `admin` / `password`（僅供展示）。
+
+`db/schema.sql`、`db/seed.sql`（位於方案根目錄，`dotnet new` 產生專案時會一併產出）提供 SQL Server schema 與初始資料，供未來要接上真實資料庫時使用：
+
+```bash
+# 於 SQL Server 建立空白資料庫後，依序執行：
+# 1. db/schema.sql — 建立 11 張資料表（Basic_*、Para_*），每個欄位皆有 MS_Description
+# 2. db/seed.sql   — 建立 admin 帳號、選單樹、Administrators 全權限群組
+```
+
+- `db/seed.sql` 的帳號為 `admin` / `Admin@123`（內含此密碼實際產生並驗證通過的 BCrypt 雜湊），**僅在接上真實資料庫後生效**，與上方 in-memory 預設的 `admin` / `password` 是兩組不同的帳密。**兩組正式環境上線前都務必更改。**
+- `Basic_Users.IdNumber` 欄位標記為 `TODO`：是否保留此敏感個資欄位，請依專案需求自行決定去留。
+- 要接上真實資料庫時，`UserRepository.cs`、`GroupFeatureStore.cs`、`MenuService.cs` 的註解中已附上對應 `db/schema.sql` 資料表的完整 Dapper SQL，可直接解開並依 `Shared/Database/DatabaseExtensions.cs` 的既有 `IDbConnection` 注入方式串接。
 
 ---
 
