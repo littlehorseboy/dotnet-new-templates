@@ -380,8 +380,12 @@ CREATE TABLE [dbo].[Basic_Api_Log](
     [id] [int] IDENTITY(1,1) NOT NULL,
     [Actions] [nvarchar](50) NOT NULL,
     [ModulesNames] [nvarchar](200) NOT NULL,
+    [RequestId] [varchar](64) NULL,
+    [Method] [varchar](10) NULL,
+    [Path] [nvarchar](200) NULL,
+    [StatusCode] [int] NULL,
+    [ElapsedMs] [int] NULL,
     [Datas] [nvarchar](max) NULL,
-    [GroupGuid] [uniqueidentifier] NULL,
     [CreateUserRowId] [uniqueidentifier] NULL,
     [CreateDate] [datetime] NULL,
     CONSTRAINT [PK_Basic_Api_Log] PRIMARY KEY CLUSTERED
@@ -393,16 +397,26 @@ GO
 
 ALTER TABLE [dbo].[Basic_Api_Log] ADD CONSTRAINT [DF_Basic_Api_Log_CreateDate] DEFAULT (getdate()) FOR [CreateDate]
 GO
+ALTER TABLE [dbo].[Basic_Api_Log] ADD CONSTRAINT [CK_Basic_Api_Log_Datas_IsJson] CHECK (Datas IS NULL OR ISJSON(Datas) = 1)
+GO
 
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'API服務LOG', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'動作(REQUEST,RESPONSE,EXCEPTION,SCHEDULE)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Actions'
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'ModulesNames'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱（格式：Namespace.Class/Method）' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'ModulesNames'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'請求關聯序號，對應 HttpContext.TraceIdentifier，用於串接同一次呼叫的 REQUEST/RESPONSE/EXCEPTION 紀錄' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'RequestId'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'HTTP 方法（GET/POST/PUT/DELETE 等）' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Method'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'HTTP 請求路徑' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Path'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'HTTP 回應狀態碼，僅 RESPONSE/EXCEPTION 列有值' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'StatusCode'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'整支 API 呼叫耗時（毫秒），僅 RESPONSE/EXCEPTION 列有值' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'ElapsedMs'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'資料' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'Datas'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'群組 Guid' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'GroupGuid'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'建立者(關聯Basic_Users)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Log', @level2type=N'COLUMN',@level2name=N'CreateUserRowId'
 GO
@@ -416,6 +430,7 @@ CREATE TABLE [dbo].[Basic_Api_Change_Log](
     [id] [int] IDENTITY(1,1) NOT NULL,
     [Actions] [nvarchar](50) NOT NULL,
     [ModulesNames] [nvarchar](200) NOT NULL,
+    [RequestId] [varchar](64) NULL,
     [BeforeDatas] [nvarchar](max) NULL,
     [AfterDatas] [nvarchar](max) NULL,
     [SQLStr] [nvarchar](max) NULL,
@@ -436,6 +451,8 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'動作(ADD,MODIFY,DELETE)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'Actions'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'功能名稱' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'ModulesNames'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'請求關聯序號，對應造成此筆資料異動的 API 呼叫（Basic_Api_Log.RequestId）' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'RequestId'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'異動前資料' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Basic_Api_Change_Log', @level2type=N'COLUMN',@level2name=N'BeforeDatas'
 GO

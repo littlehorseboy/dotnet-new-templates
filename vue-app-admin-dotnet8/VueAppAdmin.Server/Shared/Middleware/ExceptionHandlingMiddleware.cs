@@ -14,8 +14,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Unhandled exception {Method} {Path}",
-                context.Request.Method, context.Request.Path);
+            // RequestId 對應 HttpContext.TraceIdentifier，與 ApiLogFilter 正常路徑
+            // 寫出的 log 共用同一個值，兩條路徑的 log 才能互相對應
+            logger.LogError(ex, "Unhandled exception {Method} {Path} | reqId:{RequestId}",
+                context.Request.Method, context.Request.Path, context.TraceIdentifier);
 
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsJsonAsync(

@@ -14,6 +14,9 @@ public class ApiLogFilter : IActionFilter, IAlwaysRunResultFilter
     internal const string ValidationErrorsKey = "ApiLog.ValidationErrors";
 
     // 正常流程：暫存 masked request 與起始時間
+    // TODO: 未來若要寫入 Basic_Api_Log.ModulesNames，此值須透過 ActionDescriptor
+    // （context.ActionDescriptor as ControllerActionDescriptor 的 ControllerTypeInfo + ActionName）
+    // 自動組出 "Namespace.Class/Method" 格式，禁止在各 Controller/Action 手動硬編碼字串。
     public void OnActionExecuting(ActionExecutingContext context)
     {
         context.HttpContext.Items[StartTickKey] = Environment.TickCount64;
@@ -51,14 +54,18 @@ public class ApiLogFilter : IActionFilter, IAlwaysRunResultFilter
         else
             responseData = null;
 
+        // RequestId 對應 HttpContext.TraceIdentifier，讓正常路徑（此處）與例外路徑
+        // （ExceptionHandlingMiddleware）寫出的 log 可用同一個值互相對應
+        var requestId = httpContext.TraceIdentifier;
+
         if (statusCode is 400 or 401 or 403)
             _logger.Warning(
-                "[API] {Method} {Path} | user:{User} | {StatusCode} | req:{@Request} | res:{@Response} | {ElapsedMs}ms",
-                httpContext.Request.Method, httpContext.Request.Path, user, statusCode, requestData, responseData, elapsedMs);
+                "[API] {Method} {Path} | user:{User} | {StatusCode} | req:{@Request} | res:{@Response} | {ElapsedMs}ms | reqId:{RequestId}",
+                httpContext.Request.Method, httpContext.Request.Path, user, statusCode, requestData, responseData, elapsedMs, requestId);
         else
             _logger.Information(
-                "[API] {Method} {Path} | user:{User} | {StatusCode} | req:{@Request} | res:{@Response} | {ElapsedMs}ms",
-                httpContext.Request.Method, httpContext.Request.Path, user, statusCode, requestData, responseData, elapsedMs);
+                "[API] {Method} {Path} | user:{User} | {StatusCode} | req:{@Request} | res:{@Response} | {ElapsedMs}ms | reqId:{RequestId}",
+                httpContext.Request.Method, httpContext.Request.Path, user, statusCode, requestData, responseData, elapsedMs, requestId);
     }
 
     // 用 reflection 將標記 [LogMask] 的欄位替換為 "***"
