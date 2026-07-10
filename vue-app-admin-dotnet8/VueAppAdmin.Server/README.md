@@ -91,6 +91,7 @@ VueAppAdmin.Server/
 
 - `db/seed.sql` 的帳號為 `admin` / `Admin@123`（內含此密碼實際產生並驗證通過的 BCrypt 雜湊），**僅在接上真實資料庫後生效**，與上方 in-memory 預設的 `admin` / `password` 是兩組不同的帳密。**兩組正式環境上線前都務必更改。**
 - `Basic_Users.IdNumber` 欄位標記為 `TODO`：是否保留此敏感個資欄位，請依專案需求自行決定去留。
+- `Basic_Api_Log` / `Basic_Api_Change_Log` 皆有 `RequestId` 欄位，對應 `HttpContext.TraceIdentifier`，可串接同一次 API 呼叫的完整記錄與其觸發的資料異動；`Basic_Api_Log` 另新增 `Method`/`Path`/`StatusCode`/`ElapsedMs` 欄位對應 `ApiLogFilter` 的記錄內容，`Datas` 欄位加上 `CHECK(ISJSON(Datas)=1)` 限制，寫入時須為合法 JSON 字串。
 - 要接上真實資料庫時，`UserRepository.cs`、`GroupFeatureStore.cs`、`MenuService.cs` 的註解中已附上對應 `db/schema.sql` 資料表的完整 Dapper SQL，可直接解開並依 `Shared/Database/DatabaseExtensions.cs` 的既有 `IDbConnection` 注入方式串接。
 
 ---
@@ -173,7 +174,7 @@ Log level 透過 `appsettings.json` 的 `Serilog:MinimumLevel` 控制：
 
 | 案例 | Level | 格式 |
 |------|-------|------|
-| 正常流程（2xx、4xx 業務錯誤） | INF | `[API] {Method} {Path} \| user:{User} \| {StatusCode} \| req:{...} \| res:{...} \| {N}ms` |
+| 正常流程（2xx、4xx 業務錯誤） | INF | `[API] {Method} {Path} \| user:{User} \| {StatusCode} \| req:{...} \| res:{...} \| {N}ms \| reqId:{RequestId}` |
 | 401 授權短路 | WRN | 同上，`req` 與 `res` 為 `null` |
 | 400 驗證失敗 | WRN | 同上，`res` 顯示驗證錯誤欄位 |
 
@@ -186,7 +187,9 @@ public string Password { get; set; }
 
 **分頁回應精簡**：`ApiPagedResponse<T>` 的 `res` 只記錄 `{ success, total, count }`，不含完整 items 清單。
 
-> TODO：未來 `ApiLogs` 存表功能實作後，可在 `ApiResponse<T>.ToLogSummary()` 切換為精簡格式，完整 payload 改由資料庫保存。
+**請求關聯（reqId）**：每筆 log 皆附上 `reqId:{RequestId}`，對應 `HttpContext.TraceIdentifier`。`ApiLogFilter`（正常流程）與 `ExceptionHandlingMiddleware`（未攔截例外）共用同一組 `TraceIdentifier`，可用 reqId 串接同一次 API 呼叫的完整記錄，無論該次呼叫是否拋出例外。
+
+> TODO：未來 `ApiLogs` 存表功能實作後，可在 `ApiResponse<T>.ToLogSummary()` 切換為精簡格式，完整 payload 改由資料庫保存；`db/schema.sql` 的 `Basic_Api_Log` 已備妥 `RequestId`/`Method`/`Path`/`StatusCode`/`ElapsedMs` 欄位可直接對應。
 
 ### 為特定服務建立獨立 log 資料夾
 
