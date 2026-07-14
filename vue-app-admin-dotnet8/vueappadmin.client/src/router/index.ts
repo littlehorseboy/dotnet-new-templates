@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth-store';
+import { closeSidebar } from '@/composables/useSidebarDrawer';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,10 +53,11 @@ router.beforeEach((to) => {
     }
 });
 
-// 路由切換後更新瀏覽器標題
+// 路由切換後更新瀏覽器標題，並關閉窄螢幕下開啟中的側邊欄 Drawer
 router.afterEach((to) => {
     const title = to.meta.title;
     document.title = title ? `${title} | VueAppAdmin` : 'VueAppAdmin';
+    closeSidebar();
 });
 
 export default router;
