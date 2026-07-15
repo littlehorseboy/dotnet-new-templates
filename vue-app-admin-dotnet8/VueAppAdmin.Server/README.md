@@ -27,7 +27,9 @@ VueAppAdmin.Server/
 │   │   ├── ExampleItemsService.cs
 │   │   └── IExampleItemsService.cs
 │   ├── ExampleCategories/    # 示範用類別 Feature（in-memory）
+│   │   └── Responses/
 │   ├── FeatureList/          # 功能識別字清單 Feature
+│   │   └── Responses/
 │   └── Menu/                 # 選單（依使用者 features 過濾）
 ├── Shared/
 │   ├── ApiResponse.cs        # 統一回傳型別 ApiResponse<T>
@@ -221,6 +223,8 @@ Features/Products/
 ├── ProductsController.cs
 └── ProductsExtensions.cs
 ```
+
+> **Repository 何時出現**：只有當 Service 需要真正查詢外部資料來源（資料庫、外部 API 等）時才需要 `I<Xxx>Repository` / `<Xxx>Repository.cs`，把 SQL / 資料存取邏輯跟 Service 的商業邏輯分開，Service 改為注入該介面。若 Service 資料是寫死在記憶體的示範資料（如 `ExampleItems`、`ExampleCategories`、`FeatureList`、`Menu`），沒有東西好抽離，就不需要 Repository。可參考 `Auth/IUserRepository.cs`、`Auth/UserRepository.cs`（Dapper 實作）作為真接資料庫時的範例。
 
 **2. `ProductsExtensions.cs`**
 ```csharp

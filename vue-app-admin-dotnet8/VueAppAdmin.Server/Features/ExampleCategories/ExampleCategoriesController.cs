@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VueAppAdmin.Server.Features.ExampleCategories.Responses;
 using VueAppAdmin.Server.Shared;
 
 namespace VueAppAdmin.Server.Features.ExampleCategories;

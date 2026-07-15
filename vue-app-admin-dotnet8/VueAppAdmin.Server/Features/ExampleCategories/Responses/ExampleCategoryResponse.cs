@@ -1,4 +1,4 @@
-namespace VueAppAdmin.Server.Features.ExampleCategories;
+namespace VueAppAdmin.Server.Features.ExampleCategories.Responses;
 
 public class ExampleCategoryResponse
 {

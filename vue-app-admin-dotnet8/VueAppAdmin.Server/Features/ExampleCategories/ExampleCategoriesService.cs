@@ -1,3 +1,5 @@
+using VueAppAdmin.Server.Features.ExampleCategories.Responses;
+
 namespace VueAppAdmin.Server.Features.ExampleCategories;
 
 // TODO: 此服務使用記憶體靜態資料，實際專案應改為資料庫查詢

@@ -1,4 +1,4 @@
-namespace VueAppAdmin.Server.Features.FeatureList;
+namespace VueAppAdmin.Server.Features.FeatureList.Responses;
 
 public class FeatureResponse
 {
